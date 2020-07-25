@@ -9,21 +9,27 @@ import GetFeedback from './content/pages/GetFeedback';
 import Login from './content/pages/Login';
 import MyResponses from './content/pages/MyReponses';
 import SignupPage from './content/pages/SignupPage'
+import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import theme from './theme';
 import CareerTips from './content/pages/CareerTips';
 
 
 function App() {
   return (
     <div>
-      <NavBar />
-      <Header />
-      <Route exact path="/" component={Home} />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <NavBar />
+        <Header />
+        <Route exact path="/" component={Home} />
         <Route exact path='/myresponses' component={MyResponses} />
         <Route exact path='/feedback' component={GetFeedback} />
         <Route exact path='/login' component={Login} />
         <Route exact path='/signup' component={SignupPage} />
         <Route exact path='/tips' component={CareerTips} />
-      <Footer />
+        <Footer />
+      </ThemeProvider>
     </div>
   );
 }
