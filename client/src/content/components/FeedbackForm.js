@@ -6,7 +6,15 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 
+
 const FeedbackForm = () => {
+
+    const { transcript, resetTranscript } = useSpeechRecognition()
+
+    if (!SpeechRecognition.browserSupportsSpeechRecognition()) {
+        return null
+    }
+
     return (
         <Container 
             maxWidth="sm">
@@ -14,13 +22,18 @@ const FeedbackForm = () => {
                     <div className="feedback-instructions">
                     <Typography variant="h6">Speak or type your response!
                     </Typography>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<KeyboardVoiceIcon />}
+                    <div>
+                        <Button
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<KeyboardVoiceIcon />}
+                            onClick={SpeechRecognition.startListening}
                         >
-                        Talk
-                    </Button>
+                        Start
+                        </Button>
+                        <Button onClick={SpeechRecognition.stopListening}>Stop</Button>
+                        <Button onClick={resetTranscript}>Reset</Button>
+                    </div>
                     <br />
                     </div>
                     <TextareaAutosize 
@@ -28,8 +41,9 @@ const FeedbackForm = () => {
                     placeholder="Empty" 
                     rowsMin={15}
                     variant="outlined"
-                    className="feedback-form-box"
-                    />        
+                    className="feedback-form-box">
+                        <p>{transcript}</p>
+                    </TextareaAutosize>       
                 <div className="feedback-buttons-row">
                     <Button variant="contained" color="primary" type={"submit"}>Get Feedback</Button>
                     <Button variant="contained" color="primary" type={"submit"}>Save Response</Button>
