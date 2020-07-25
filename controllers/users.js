@@ -3,6 +3,7 @@ const router = express.Router();
 
 // load user model
 const User = require('../models/User');
+const toolbox = require('../private/toolbox');
 
 // test route
 router.get('/', (req, res) => {
@@ -23,7 +24,20 @@ router.post('/:userId/questions', (req, res) => {
 
 // do registration auth and create a new user
 router.post('/register', (req, res) => {
-  res.send('<h1>🐿 Register a user 🐿</h1>');
+  let email = req.body.email;
+  User.findOne({ email })
+    .then(user => {
+      console.log(user)
+      if (user){
+        // User already exists!
+        toolbox.log(user)
+        res.json(user)
+      } else {
+        // user does not exist! create one!
+        toolbox.log('no user found!')
+        res.json({ msg: `no user found` })
+      }
+    })
 });
 
 // do login auth and log user in
