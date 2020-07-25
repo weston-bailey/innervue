@@ -33,7 +33,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/innervuedb');
 const db = mongoose.connection;
 
 db.once('open', () => {
-  console.log(chalk.black.bgGreen(`Connected to MongoDB at ${db.host}:${db.port}`));
+  console.log(chalk.black.bgGreen(`Connected to MongoDB ${db.name} at ${db.host}:${db.port}`));
 });
 
 db.on('error', (error) => {
@@ -43,10 +43,10 @@ db.on('error', (error) => {
 // test route
 app.get('/', (req, res) => {
   res.send('<h1>Hello World</h1>')
-})
+});
 
 // route controllers
-app.use('/users', require('./controllers/users'))
+app.use('/users', require('./controllers/users'));
 
 // initialize app on port
 const port = process.env.PORT || 3001;

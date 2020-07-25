@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
+// load user model
+const User = require('../models/User');
+
 // test route
 router.get('/', (req, res) => {
-  res.send('<h1>🐡 Welcome to the users controller! 🐡</h1>');
+  res.json({ msg: 'Welcome to the users endpoint'});
 });
 
 // get user's answered questions from database
@@ -21,24 +24,6 @@ router.post('/:userId/questions', (req, res) => {
 // do registration auth and create a new user
 router.post('/register', (req, res) => {
   res.send('<h1>🐿 Register a user 🐿</h1>');
-  // const User = require('./models/User');
-  // User.create({
-  //   firstName: 'test first',
-  //   lastName: 'test last',
-  //   email: 'testererererer@test.com',
-  //   password: '12345678'
-  //   }, (err, user) => {
-  //     if (err) return toolbox.logError(err);
-  //     user.answeredQuestions.push({
-  //       category: 'test category',
-  //       content: 'test content',
-  //       analysis: {
-  //         key1: 'test key1',
-  //         key2: 'test key2'
-  //       }
-  //     })
-  //     user.save(error => toolbox.logError(error))
-  // })
 });
 
 // do login auth and log user in
@@ -49,7 +34,6 @@ router.post('/login', (req, res) => {
 router.get('/current', (req, res) => {
   res.send('<h1>🦘 Check user credentials 🦘</h1>');
 });
-
 
 
 module.exports = router;

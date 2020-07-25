@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// answered questions embedded document
 const answeredQuestionSchema = new mongoose.Schema({
   category: String,
   content: String,
@@ -12,6 +13,7 @@ const answeredQuestionSchema = new mongoose.Schema({
   timestamps: true
 })
 
+// user collection
 const userSchema = new mongoose.Schema({
     firstName: {
       type: String,
