@@ -1,8 +1,11 @@
 import React from 'react';
+import StickyFooter from '../content/components/StickyFooter'
 
 const Footer = () => {
     return (
-        <div>This will be our nice footer</div>
+        <div>
+            <StickyFooter />
+        </div>
     )
 }
 
