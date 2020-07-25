@@ -45,30 +45,12 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World</h1>')
 })
 
-// const User = require('./models/User');
-// User.create({
-//   firstName: 'test first',
-//   lastName: 'test last',
-//   email: 'testererererer@test.com',
-//   password: '12345678'
-//   }, (err, user) => {
-//     if (err) return toolbox.logError(err);
-//     user.answeredQuestions.push({
-//       category: 'test category',
-//       content: 'test content',
-//       analysis: {
-//         key1: 'test key1',
-//         key2: 'test key2'
-//       }
-//     })
-//     user.save(error => toolbox.logError(error))
-// })
-
 // route controllers
 app.use('/users', require('./controllers/users'))
 
 // initialize app on port
 const port = process.env.PORT || 3001;
+
 app.listen(port, () => {
   rowdyResults.print();
   console.log(chalk.black.bgYellow(` ~~~listening on port: ${port}~~~ `)); 
