@@ -42,7 +42,35 @@
   color: white;
 }
 
-.feedback-form-box{
-  width: 40vw;
+.feedback-form{
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  width: 44vw;
+  margin-left: 20vw;
+  margin-top: 3vw;
 }
 
+.feedback-form-box{
+  border: none;
+  width: 40vw;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
+  border-radius: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.feedback-buttons-row{
+  margin-top: 1em;
+  width: 44vw;
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 2em;
+}
+
+.feedback-instructions{
+  padding: 1em;
+  /* border: 1px solid black; */
+  display: flex;
+  justify-content: space-evenly;
+  width: 42vw;
+}

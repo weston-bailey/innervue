@@ -10,29 +10,31 @@ const FeedbackForm = () => {
     return (
         <Container 
             maxWidth="sm">
-            <div>
-                <div>
-                <Typography>You can submit your responses by speaking or typing.
-                </Typography>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    startIcon={<KeyboardVoiceIcon />}
-                    >
-                    Talk
-                </Button>
+                <div className="feedback-form">
+                    <div className="feedback-instructions">
+                    <Typography variant="h6">Speak or type your response!
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<KeyboardVoiceIcon />}
+                        >
+                        Talk
+                    </Button>
+                    <br />
+                    </div>
+                    <TextareaAutosize 
+                    aria-label="empty textarea" 
+                    placeholder="Empty" 
+                    rowsMin={15}
+                    className="feedback-form-box"
+                    />        
+                <div className="feedback-buttons-row">
+                    <Button variant="contained" color="primary" type={"submit"}>Get Feedback</Button>
+                    <Button variant="contained" color="primary" type={"submit"}>Save Response</Button>
                 </div>
-                <TextareaAutosize 
-                aria-label="empty textarea" 
-                placeholder="Empty" 
-                rowsMin={15}
-                className="feedback-form-box"
-                />        
-            </div>
-            <Button variant="outlined" color="primary" type={"submit"}>Get Feedback</Button>
-            <Button variant="outlined" color="primary" type={"submit"}>Save Response</Button>
+                </div>
         </Container>
-
     );
 };
 
