@@ -24,7 +24,7 @@ router.post('/:userId/questions', (req, res) => {
 
 // do registration auth and create a new user
 router.post('/register', (req, res) => {
-  // data from req body (all are required to write to the database)
+  // data from request body (all are required to write to the database)
   let firstName = req.body.firstName;
   let lastName = req.body.lastName;
   let email = req.body.email;
@@ -37,6 +37,7 @@ router.post('/register', (req, res) => {
     }
     if(user){
       // if user is found respond with user object
+      // TODO respond with status to client
       res.json({ message: 'User Already Exists!', user });
     } else {
       // if user is not found create a new one
@@ -63,9 +64,21 @@ router.post('/register', (req, res) => {
 
 // do login auth and log user in
 router.post('/login', (req, res) => {
+  // data from request body
   let email = req.body.email;
   let password = req.body.password;
-  res.json({})
+
+  User.findOne({ email }, (error, user) => {
+    if (error) {
+    // TODO send error status to client
+      return toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
+    }
+    if(!user){
+      return ({ msg: 'User not found', email })
+    }
+
+    res.json({})
+  })
 });
 
 router.get('/current', (req, res) => {
