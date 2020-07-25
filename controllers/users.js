@@ -24,20 +24,18 @@ router.post('/:userId/questions', (req, res) => {
 
 // do registration auth and create a new user
 router.post('/register', (req, res) => {
+
   let email = req.body.email;
-  User.findOne({ email })
-    .then(user => {
-      console.log(user)
-      if (user){
-        // User already exists!
-        toolbox.log(user)
-        res.json(user)
-      } else {
-        // user does not exist! create one!
-        toolbox.log('no user found!')
-        res.json({ msg: `no user found` })
-      }
-    })
+
+  User.findOne({ email }, (error, user) => {
+    if (error) return toolbox.logError(error);
+    if(user){
+      res.json(user)
+    } else {
+      res.json({ msg: 'no user found!' })
+    }
+  })
+
 });
 
 // do login auth and log user in
