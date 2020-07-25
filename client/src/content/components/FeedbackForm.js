@@ -5,6 +5,7 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button'
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
+import StopIcon from '@material-ui/icons/Stop';
 
 
 const FeedbackForm = () => {
@@ -20,9 +21,9 @@ const FeedbackForm = () => {
             maxWidth="sm">
                 <div className="feedback-form">
                     <div className="feedback-instructions">
-                    <Typography variant="h6">Speak or type your response!
+                    <Typography variant="h6">Speak or type!
                     </Typography>
-                    <div>
+                    <div className="feedback-buttons-row">
                         <Button
                             variant="contained"
                             color="secondary"
@@ -31,8 +32,15 @@ const FeedbackForm = () => {
                         >
                         Start
                         </Button>
-                        <Button onClick={SpeechRecognition.stopListening}>Stop</Button>
-                        <Button onClick={resetTranscript}>Reset</Button>
+                        <Button onClick={SpeechRecognition.stopListening}
+                        startIcon={<StopIcon/>}
+                        variant="contained"
+                        color="secondary"
+                        >Stop</Button>
+                        <Button onClick={resetTranscript}
+                        variant="contained"
+                        color="secondary"
+                        >Reset</Button>
                     </div>
                     <br />
                     </div>
