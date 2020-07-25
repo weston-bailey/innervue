@@ -18,7 +18,10 @@ router.get('/:userId/questions', (req, res) => {
 
 // contact google sentiment API and add answered question to user
 router.post('/:userId/questions', (req, res) => {
+  // URL query string
   let userId = req.params.userId;
+  // request body params 
+  console.log(request.body)
   res.send(`<h1>🐈 Add an answered question for user ${userId} 🐈</h1>`);
 });
 
@@ -92,8 +95,8 @@ router.post('/login', (req, res) => {
 });
 
 router.get('/current', (req, res) => {
-  res.send('<h1>🦘 Check user credentials 🦘</h1>');
+  // TODO send user info
+  res.send('<h1>🦘 Check user auth credentials 🦘</h1>');
 });
-
 
 module.exports = router;
