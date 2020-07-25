@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const answeredQuestionSchema = new mongoose.Schema({
   category: String,
   content: String,
+  answer: String,
   // TODO update analysis 
   analysis: {
     key1: String,

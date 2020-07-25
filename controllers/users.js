@@ -20,9 +20,26 @@ router.get('/:userId/questions', (req, res) => {
 router.post('/:userId/questions', (req, res) => {
   // URL query string
   let userId = req.params.userId;
-  // request body params 
-  console.log(request.body)
-  res.send(`<h1>🐈 Add an answered question for user ${userId} 🐈</h1>`);
+  // request body params: preformatted JSON
+  let question = req.body
+  toolbox.log(req.body)
+  User.findOne({ _id: userId }, (error, user) => {
+    if (error) {
+    // TODO send error status to client
+      res.json({ msg: 'database error', error })
+      return toolbox.logError('users.js', 'POST /register', 'User.findOne()', error)
+    }
+    if(!user){
+      // user not found in database
+      // TODO send error status to client
+      return res.json({ msg: 'User id not found', userId })
+    }
+    // update user
+    user.answeredQuestions.push(question)
+    res.json(user)
+
+  })
+
 });
 
 // do registration auth and create a new user
