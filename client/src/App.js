@@ -6,8 +6,9 @@ import Header from './wrappers/Header';
 import Footer from './wrappers/Footer';
 import Home from './content/pages/Home';
 import GetFeedback from './content/pages/GetFeedback';
-import LoginSignup from './content/pages/LoginSignup';
+import Login from './content/pages/Login';
 import MyResponses from './content/pages/MyReponses';
+import SignupPage from './content/pages/SignupPage'
 
 
 function App() {
@@ -18,7 +19,8 @@ function App() {
       <Route exact path="/" component={Home} />
         <Route exact path='/myresponses' component={MyResponses} />
         <Route exact path='/feedback' component={GetFeedback} />
-        <Route exact path='/login' component={LoginSignup} />
+        <Route exact path='/login' component={Login} />
+        <Route exact path='/signup' component={SignupPage} />
       <Footer />
     </div>
   );

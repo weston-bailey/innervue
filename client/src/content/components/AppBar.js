@@ -32,16 +32,19 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h2" className={classes.title}>
-            <Link to="/">innervue</Link>
+            <Link className="nav-link" to="/">innervue</Link>
           </Typography>
           <Button color="inherit">
-          <Link to="/myresponses">My Responses</Link>
+          <Link className="nav-link" to="/myresponses">My Responses</Link>
           </Button>
           <Button color="inherit">
-          <Link to="/feedback">Get Feedback</Link>
+          <Link className="nav-link" to="/feedback">Get Feedback</Link>
           </Button>
           <Button color="inherit">
-          <Link to="/login">Login/Signup</Link>          
+          <Link className="nav-link" to="/login">Login</Link>          
+          </Button>
+          <Button color="inherit">
+          <Link className="nav-link" to="/signup">Signup</Link>          
           </Button>
         </Toolbar>
       </AppBar>
