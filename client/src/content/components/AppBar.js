@@ -46,6 +46,9 @@ export default function ButtonAppBar() {
           <Button color="inherit">
           <Link className="nav-link" to="/signup">Signup</Link>          
           </Button>
+          <Button color="inherit">
+          <Link className="nav-link" to="/tips">Career Advice</Link>          
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
