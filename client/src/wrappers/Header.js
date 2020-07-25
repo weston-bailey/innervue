@@ -1,8 +1,16 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
+import Container from '@material-ui/core/Container';
 
 const Header = () => {
     return (
-        <div>This will be our nice header</div>
+        <div>
+          <Container>
+          <Typography variant="h4">
+              todo: make header look better
+          </Typography>
+          </Container>
+        </div>
     )
 }
 

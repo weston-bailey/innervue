@@ -1,10 +1,14 @@
 import React from 'react';
+import FeedbackForm from '../components/FeedbackForm';
+import Container from '@material-ui/core/Container';
 
 const GetFeedback = () => {
     return (
-        <div>
-            get feedback
-        </div>
+        <Container>
+            <div>
+                <FeedbackForm />
+            </div>
+        </Container>
     );
 };
 
