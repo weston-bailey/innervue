@@ -27,6 +27,7 @@ const FeedbackForm = () => {
                     aria-label="empty textarea" 
                     placeholder="Empty" 
                     rowsMin={15}
+                    variant="outlined"
                     className="feedback-form-box"
                     />        
                 <div className="feedback-buttons-row">
