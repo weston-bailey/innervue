@@ -7,7 +7,7 @@ const Header = () => {
         <div>
           <Container>
           <Typography variant="h4">
-              todo: make header look betters
+              todo: make header look better
           </Typography>
           </Container>
         </div>
