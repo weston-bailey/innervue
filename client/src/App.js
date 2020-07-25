@@ -12,6 +12,7 @@ import SignupPage from './content/pages/SignupPage'
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
+import CareerTips from './content/pages/CareerTips';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route exact path='/feedback' component={GetFeedback} />
         <Route exact path='/login' component={Login} />
         <Route exact path='/signup' component={SignupPage} />
+        <Route exact path='/tips' component={CareerTips} />
         <Footer />
       </ThemeProvider>
     </div>
