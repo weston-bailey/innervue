@@ -74,10 +74,20 @@ router.post('/login', (req, res) => {
       return toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
     }
     if(!user){
-      return ({ msg: 'User not found', email })
+      return res.json({ msg: 'User not found', email, password })
     }
 
-    res.json({})
+    // TODO bcrypt compare passwords
+
+    if(password !== user.password){
+      // TODO create jwt token payload
+      // TODO sign token
+      // TODO send jwt token
+      return res.json({ msg: 'Passwords do not match', email, password, user })
+    } else {
+      // TODO send status to client
+      return res.json({ msg: 'User Found, credentials matche!', email, password, user })
+    }
   })
 });
 
