@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import {BrowserRouter as Link} from "react-router-dom"
+import {BrowserRouter as Router, Route, Link} from "react-router-dom"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -41,7 +41,7 @@ export default function ButtonAppBar() {
           <Link to="/feedback">Get Feedback</Link>
           </Button>
           <Button color="inherit">
-          <Link to="/signup">Login/Signup</Link>          
+          <Link to="/login">Login/Signup</Link>          
           </Button>
         </Toolbar>
       </AppBar>
