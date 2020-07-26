@@ -43,7 +43,7 @@
 }
 
 .feedback-form{
-  background-color: #e0e0e0;
+  background-color: #d7ddff;
   border-radius: 10px;
   width: 44vw;
   margin-left: 20vw;
@@ -54,22 +54,40 @@
   width: 40vw;
   margin-left: 2vw;
   margin-bottom: 2vw;
+  border: none;
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 .feedback-buttons-row{
-  margin-top: 1em;
   width: 44vw;
+  padding: 0.5em;
+  /* text-align: center; */
+  /* border: 1px solid black; */
   display: flex;
   justify-content: space-evenly;
-  padding-bottom: 2em;
 }
 
 .feedback-instructions{
   padding: 1em;
   /* border: 1px solid black; */
   display: flex;
-  justify-content: space-evenly;
-  width: 42vw;
+  justify-content: center;
+  width: 44vw;
+}
+
+.speech-results{
+  width: 40vw;
+  margin-left: 2vw;
+  margin-bottom: 2vw;
+  /* border: 1px solid black; */
+  border-radius: 5px;
+  height: 10em;
+  background-color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.feedbackBtn{
+  text-align: center;
+  /* border: 1px solid black; */
 }
