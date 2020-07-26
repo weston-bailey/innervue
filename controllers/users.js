@@ -161,6 +161,54 @@ router.get('/current', (req, res) => {
 
 // AUTH ROUTES FOR TESTING TODO: REMOVE/Inegrate with app routes
 
+// do login auth and log user in
+router.post('/auth/login', (req, res) => {
+  // data from request body
+  let email = req.body.email;
+  let password = req.body.password;
+
+  User.findOne({ email }, (error, user) => {
+    if (error) {
+      // send status 500 server error
+      res.status(500).json({ message: 'Internal database error finding user! Please try again.', error });
+      return toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
+    }
+    
+    if(!user){
+      // if user is not found respond with status 400 bad request
+      // TODO stop sending email and password back
+      return res.status(400).json({ message: 'No user found with that email!', email, password});
+    }
+
+    // bcrypt compare passwords
+    bcrypt.compare(password, user.password)
+    .then(isMatch => {
+      if(isMatch) {
+        // if passwords match, create and send JSON Web Token
+        const payload = { id: user.id, 
+                          firstName: user.firstName, 
+                          lastName: user.lastName, 
+                          fullName: user.getFullName(),
+                          answeredQuestions: user.answeredQuestions }
+
+        // Sign token
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
+          if (error) {
+            // send status 500 server error
+            res.status(500).json({ message: 'Internal jwt token error authorizing user! Please try again.', error });
+            return toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
+          }
+
+          return res.json({ success: true, token: 'Bearer ' + token })
+        });
+      } else {
+        // send status 400 if password is incorrect
+        return res.status(400).json({ message: 'Password or email is incorrect' })
+      }
+    })
+  })
+});
+
 // do registration auth and create a new user
 router.post('/auth/register', (req, res) => {
   // data from request body (all are required to write to the database)
@@ -175,6 +223,7 @@ router.post('/auth/register', (req, res) => {
       res.status(500).json({ message: 'internal database error finding user! Please try again.', error });
       return toolbox.logError('users.js', 'POST /register', 'User.findOne()', error)
     }
+
     if(user){
       // if user is found respond with status 400 bad request
       // TODO stop sending user object
@@ -188,11 +237,21 @@ router.post('/auth/register', (req, res) => {
         email,
         password,
       })
-      
-      // TODO Salt and Hash password with bcrypt-js, then save new user 
-      bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(newUser.password, salt, (err, hash) => {
-          if(err) throw err;
+      // Salt and Hash password with bcrypt-js, then save new user 
+      bcrypt.genSalt(10, (error, salt) => {
+        if (error) {
+          // send status 500 server error
+          res.status(500).json({ message: 'Internal bcrypt error creating user! Please try again.', error });
+          return toolbox.logError('users.js', 'POST /register', 'bcrypt,genSalt()', error)
+        }
+
+        bcrypt.hash(newUser.password, salt, (error, hash) => {
+          if (error) {
+            // send status 500 server error
+            res.status(500).json({ message: 'Internal bcrypt error creating user! Please try again.', error });
+            return toolbox.logError('users.js', 'POST /register', 'bcrypt.hash()', error)
+          }
+
           newUser.password = hash;
           newUser.save((error, user) => {  
             if (error) { 
@@ -200,8 +259,10 @@ router.post('/auth/register', (req, res) => {
               res.status(500).json({ message: 'internal database error saving user! Please try again.', error });
               return toolbox.logError('users.js', 'POST /register', 'newUser()', error) 
             }
+
             res.json({ message: 'Created New User!', user });
           })
+
         })
       })
     }
