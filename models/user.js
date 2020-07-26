@@ -1,8 +1,10 @@
 const mongoose = require('mongoose');
 
+// answered questions embedded document
 const answeredQuestionSchema = new mongoose.Schema({
   category: String,
   content: String,
+  answer: String,
   // TODO update analysis 
   analysis: {
     key1: String,
@@ -12,6 +14,7 @@ const answeredQuestionSchema = new mongoose.Schema({
   timestamps: true
 })
 
+// user collection
 const userSchema = new mongoose.Schema({
     firstName: {
       type: String,
@@ -33,7 +36,7 @@ const userSchema = new mongoose.Schema({
     password: {
       type: String,
       required: true,
-      minlength: 8,
+      minlength: 1,
       maxlength: 100
     },
     answeredQuestions: [answeredQuestionSchema],

@@ -4,7 +4,7 @@ const chalk = require('chalk');
 module.exports = {
   //visible errors
   logError: function(){
-    console.log(`${chalk.black.bgRed.bold(`ლ(ಠ益ಠლ)`)}🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥${chalk.red.bold(`BEGIN ERROR LOG`)}🔥🔥🔥🔥🔥🔥🔥${chalk.black.bgRed.bold(`‎(╯ ಥ益ಥ )╯ ┻━┻`)}`);
+    console.log(`${chalk.black.bgRed.bold(`ლ(ಠ益ಠლ)`)}🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥${chalk.red.bold(`BEGIN ERROR LOG`)}🔥🔥🔥🔥🔥🔥🔥${chalk.black.bgRed.bold(`‎(╯ ಥ益ಥ )╯ ┻━┻ `)}`);
     for (let i = 0; i < arguments.length; i++) {
       console.log(arguments[i]);
     }
