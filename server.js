@@ -3,8 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const toolbox = require('./private/toolbox');
+const passport = require('passport');
 // for logging
+const toolbox = require('./private/toolbox');
 const chalk = require('chalk');
 const rowdy = require('rowdy-logger');
 
@@ -27,8 +28,14 @@ app.use(function(req, res, next) {
   next();
 });
 
-// database
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/innervuedb');
+// database setup af connection (options are to supress console warnings)
+const mongooseOptions = { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true, 
+  useCreateIndex: true
+};
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/innervuedb', mongooseOptions);
 
 const db = mongoose.connection;
 
@@ -45,6 +52,12 @@ app.get('/', (req, res) => {
   res.send('<h1>Hello World</h1>')
 });
 
+// Passport Middleware
+app.use(passport.initialize());
+
+// Passport JWT Config
+require('./config/passport')(passport);
+
 // route controllers
 app.use('/users', require('./controllers/users'));
 
@@ -56,3 +69,5 @@ app.listen(port, () => {
   console.log(chalk.black.bgYellow(` ~~~listening on port: ${port}~~~ `)); 
 });
 
+// check for enviromenmtal variable errors
+toolbox.envError();
