@@ -28,8 +28,10 @@ app.use(function(req, res, next) {
   next();
 });
 
-// database
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/innervuedb');
+// database setup af connection (options are to supress warnings)
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/innervuedb', { useNewUrlParser: true, 
+                                                                                useUnifiedTopology: true, 
+                                                                                useCreateIndex: true});
 
 const db = mongoose.connection;
 
