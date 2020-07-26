@@ -14,6 +14,8 @@ const FeedbackForm = () => {
         inputs: ''
       })
 
+    const [isListening, setIsListening] = useState(false)
+
     const handleInputChange = e => {
         e.persist();
         console.log(`Making a change to ${e.target.name}`)
@@ -21,15 +23,14 @@ const FeedbackForm = () => {
         )
       }
 
-    
     const {interimTranscript, transcript, finalTranscript, resetTranscript } = useSpeechRecognition()
 
     useEffect(() => {
         if (interimTranscript !== '') {
-            console.log('Got interim result:', interimTranscript)
+            // console.log('Got interim result:', interimTranscript)
         }
         if (finalTranscript !== '') {
-            console.log('Got final result:', finalTranscript)
+            // console.log('Got final result:', finalTranscript)
         }
     }, [interimTranscript, finalTranscript]);
 
@@ -39,53 +40,55 @@ const FeedbackForm = () => {
 
     const startListening = () => {
         SpeechRecognition.startListening({ continuous: true })
+        setIsListening(true)
     }
 
     const stopListening = () => {
         SpeechRecognition.stopListening()
+        setIsListening(false)
     }
     
 
     const displaySpeechForm = (
         <Container 
-            maxWidth="sm">
-            <div className="feedback-form">
-                <div className="feedback-instructions">
-                <Typography variant="h6">Speak or type!
-                </Typography>
-                    <div className="feedback-buttons-row">
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            startIcon={<KeyboardVoiceIcon />}
-                            onClick={startListening}
-                        >
-                        Start
-                        </Button>
-                        <Button onClick={() => {
-                            stopListening()
-                            setInputs(finalTranscript)
-                            console.log(inputs)}
-                        }
-                        startIcon={<StopIcon/>}
-                        variant="contained"
-                        color="secondary"
-                        >Stop</Button>
-                        <Button onClick={resetTranscript}
-                        variant="contained"
-                        color="secondary"
-                        >Reset</Button>
-                    </div>
-                    <div className="speech-results">
-                        {finalTranscript}
-                    </div>
-                    <br />
-                    </div>
-                <div className="feedback-buttons-row">
-                    <Button variant="contained" color="primary" type={"submit"}>Get Feedback</Button>
-                </div>
+        maxWidth="sm">
+        <div className="feedback-form">
+            <div className="feedback-instructions">
+            <Typography variant="h6">Speak or type!
+            </Typography>
             </div>
-        </Container>
+                <div className="feedback-buttons-row">
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={<KeyboardVoiceIcon />}
+                        onClick={startListening}
+                    >
+                    Start
+                    </Button>
+                    <Button onClick={() => {
+                        stopListening()
+                        setInputs(finalTranscript)
+                        console.log(inputs)}
+                    }
+                    startIcon={<StopIcon/>}
+                    variant="contained"
+                    color="secondary"
+                    >Stop</Button>
+                    <Button onClick={resetTranscript}
+                    variant="contained"
+                    color="secondary"
+                    >Reset</Button>
+                </div>
+                <div className="speech-results">
+                    {transcript}
+                </div>
+                <br />
+            <div className="feedbackBtn">
+                <Button variant="contained" color="primary" type={"submit"}>Get Feedback</Button>
+            </div>
+        </div>
+    </Container>
     )
 
     const displayWriteForm = (
@@ -100,9 +103,7 @@ const FeedbackForm = () => {
                             variant="contained"
                             color="secondary"
                             startIcon={<KeyboardVoiceIcon />}
-                            onClick={() => {
-                                SpeechRecognition.startListening({ continuous: true })
-                            }}
+                            onClick={startListening}
                         >
                         Start
                         </Button>
@@ -128,7 +129,7 @@ const FeedbackForm = () => {
                         onChange={handleInputChange}
                         rowsMin={15}>
                     </TextareaAutosize>
-                <div className="feedback-buttons-row">
+                <div className="feedbackBtn">
                     <Button variant="contained" color="primary" type={"submit"}>Get Feedback</Button>
                 </div>
             </div>
@@ -136,7 +137,8 @@ const FeedbackForm = () => {
     )
 
     // get one where we are talking into it, or one where we are supposed to write
-    let correctForm = startListening ? displaySpeechForm :  displayWriteForm
+    let correctForm = isListening ? displaySpeechForm :  displayWriteForm
+    console.log(isListening)
 
     return (
         <div className="show-correct-form">
