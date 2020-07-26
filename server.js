@@ -3,8 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const toolbox = require('./private/toolbox');
+const passport = require('passport');
 // for logging
+const toolbox = require('./private/toolbox');
 const chalk = require('chalk');
 const rowdy = require('rowdy-logger');
 
@@ -44,6 +45,12 @@ db.on('error', (error) => {
 app.get('/', (req, res) => {
   res.send('<h1>Hello World</h1>')
 });
+
+// Passport Middleware
+app.use(passport.initialize());
+
+// Passport JWT Config
+require('./config/passport')(passport);
 
 // route controllers
 app.use('/users', require('./controllers/users'));
