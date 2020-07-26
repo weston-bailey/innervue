@@ -173,7 +173,7 @@ router.post('/auth/login', (req, res) => {
       res.status(500).json({ message: 'Internal database error finding user! Please try again.', error });
       return toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
     }
-    
+
     if(!user){
       // if user is not found respond with status 400 bad request
       // TODO stop sending email and password back
@@ -185,11 +185,13 @@ router.post('/auth/login', (req, res) => {
     .then(isMatch => {
       if(isMatch) {
         // if passwords match, create and send JSON Web Token
-        const payload = { id: user.id, 
-                          firstName: user.firstName, 
-                          lastName: user.lastName, 
-                          fullName: user.getFullName(),
-                          answeredQuestions: user.answeredQuestions }
+        const payload = { 
+          id: user.id, 
+          firstName: user.firstName, 
+          lastName: user.lastName, 
+          fullName: user.getFullName(),
+          answeredQuestions: user.answeredQuestions 
+        }
 
         // Sign token
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
@@ -267,6 +269,20 @@ router.post('/auth/register', (req, res) => {
       })
     }
   })
+});
+
+router.get('/auth/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+  // res.json({ msg: 'Success' })
+  // res.json(req.user);
+  // if passwords match, create and send JSON Web Token
+  res.json({ 
+    id: req.user.id, 
+    firstName: req.user.firstName, 
+    lastName: req.user.lastName, 
+    fullName: req.user.getFullName(),
+    answeredQuestions: req.user.answeredQuestions 
+  });
+
 });
 
 module.exports = router;
