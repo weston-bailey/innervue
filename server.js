@@ -33,7 +33,7 @@ const mongooseOptions = {
   useNewUrlParser: true, 
   useUnifiedTopology: true, 
   useCreateIndex: true
-}
+};
 
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/innervuedb', mongooseOptions);
 
@@ -69,3 +69,5 @@ app.listen(port, () => {
   console.log(chalk.black.bgYellow(` ~~~listening on port: ${port}~~~ `)); 
 });
 
+// check for enviromenmtal variable errors
+toolbox.envError();

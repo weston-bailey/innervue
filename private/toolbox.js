@@ -17,5 +17,13 @@ module.exports = {
       console.log(arguments[i]);
     }
     console.log((`${chalk.black.bgGreen.bold(`└[∵┌]`)}👾👾👾👾👾👾👾👾👾👾👾${chalk.green.bold(`END └[ ∵ ]┘ LOG`)}👾👾👾👾👾👾👾👾👾👾👾👾${chalk.black.bgGreen.bold(`[┐∵]┘`)}`));
+  },
+  // errors to throw if needed enviromental varaibes aren't found
+  jwtSecretError: `JwtStrategy requires a secret or key for Auth!\nplease add ${chalk.black.bold.bgYellow('JWT_SECRET=<your_secret_key_here>')}\nto your ${chalk.black.bold.bgYellow('.env')} file and restart nodemon\n(your secret key can be any string without spaces)`,
+  envError: function(){
+    let messages = []
+    if(!process.env.JWT_SECRET) messages.push(this.jwtSecretError);
+
+    if (messages.length > 0) messages.forEach(message => this.logError(message));
   }
 }

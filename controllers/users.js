@@ -274,7 +274,7 @@ router.post('/auth/register', (req, res) => {
 router.get('/auth/current', passport.authenticate('jwt', { session: false }), (req, res) => {
   // res.json({ msg: 'Success' })
   // res.json(req.user);
-  // if passwords match, create and send JSON Web Token
+  // respond wit user data -- TODO figure out what kind of request to hit this route with
   res.json({ 
     id: req.user.id, 
     firstName: req.user.firstName, 

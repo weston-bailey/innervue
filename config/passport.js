@@ -10,12 +10,9 @@ options.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 options.secretOrKey = process.env.JWT_SECRET;
 
 module.exports = passport => {
-  // return with message if no jwt secret is found
+  // return if no jwt secret is found to prevent crash
   if(!process.env.JWT_SECRET){
-    return toolbox.logError('JwtStrategy requires a secret or key for Auth!', 
-                      `please add ${chalk.black.bold.bgYellow('JWT_SECRET=<your_secret_key_here>')}`,
-                      `to your ${chalk.black.bold.bgYellow('.env')} file and restart nodemon`,
-                      '(your secret key can be any string without spaces)');
+    return 
   }
 
   passport.use(new JwtStrategy(options, (jwt_payload, done) => {
