@@ -35,24 +35,25 @@ db.on('error', (error) => {
 
 // creating a user with questions
 
-// User.create({
-//   firstName: 'Weston',
-//   lastName: 'Bailey',
-//   email: 'test4@test.com',
-//   password: '12345678'
-//   }, (err, user) => {
-//     if (err) return toolbox.logError(err);
-//     user.answeredQuestions.push({
-//       category: 'test category',
-//       content: 'test content',
-//       analysis: {
-//         key1: 'test key1',
-//         key2: 'test key2'
-//       }
-//     })
-//     toolbox.log(user)
-//     user.save(error => {  if (error) return toolbox.logError(error) })
-// })
+User.create({
+  firstName: 'Weston',
+  lastName: 'Bailey',
+  email: 'test4@test.com',
+  password: '12345678'
+  }, (err, user) => {
+    if (err) return toolbox.logError(err);
+    user.answeredQuestions.push({
+      category: 'test category',
+      content: 'test content',
+      answer: 'test answer',
+      analysis: {
+        key1: 'test key1',
+        key2: 'test key2'
+      }
+    })
+    toolbox.log(user)
+    user.save(error => {  if (error) return toolbox.logError(error) })
+})
 
 // Find All
 
@@ -74,14 +75,14 @@ db.on('error', (error) => {
 
 // find one that doesn't exist
 
-// User.findOne({ email: ' ' }, (error, user) => {
-//   if (error) return toolbox.logError(error);
-//   if(user){
-//     toolbox.log(user, user.answeredQuestions);
-//   } else {
-//     toolbox.log('no user found!')
-//   }
-// })
+User.findOne({ email: ' ' }, (error, user) => {
+  if (error) return toolbox.logError(error);
+  if(user){
+    toolbox.log(user, user.answeredQuestions);
+  } else {
+    toolbox.log('no user found!')
+  }
+})
 
 // find one and add a question
 

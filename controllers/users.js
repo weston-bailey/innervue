@@ -13,30 +13,63 @@ router.get('/', (req, res) => {
 // get user's answered questions from database
 router.get('/:userId/questions', (req, res) => {
   let userId = req.params.userId;
-  res.send(`<h1>🦦Get user ${userId}'s answered quesitons 🦦</h1>`);
-});
-
-// contact google sentiment API and add answered question to user
-router.post('/:userId/questions', (req, res) => {
-  // URL query string
-  let userId = req.params.userId;
-  // request body params: preformatted JSON
-  let question = req.body
-  toolbox.log(req.body)
+  
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
-    // TODO send error status to client
-      res.json({ msg: 'database error', error })
-      return toolbox.logError('users.js', 'POST /register', 'User.findOne()', error)
+      // TODO send error status to client
+      res.json({ msg: 'database error finding user', error })
+      return toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
     }
     if(!user){
       // user not found in database
       // TODO send error status to client
       return res.json({ msg: 'User id not found', userId })
     }
-    // update user
+    // send user's answred questions to client
+    res.json(user.answeredQuestions);
+
+  })
+});
+
+// contact google sentiment API and add answered question to user
+router.post('/:userId/questions', (req, res) => {
+  // URL query string
+  let userId = req.params.userId;
+  // request body params: preformatted JSON of the question that was answered
+  let question = req.body
+
+  User.findOne({ _id: userId }, (error, user) => {
+    if (error) {
+      // TODO send error status to client
+      res.json({ msg: 'database error finding user', error })
+      return toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
+    }
+    if(!user){
+      // user not found in database
+      // TODO send error status to client
+      return res.json({ msg: 'User id not found', userId })
+    }
+
+    // TODO Contact google API
+
+    // TODO format user feedback based on sentiment analysis
+
+    // TODO mount analysis on question
+
+    // update user in database
     user.answeredQuestions.push(question)
-    res.json(user)
+    user.save((error, user) => {
+      if (error) { 
+        // TODO send error status to client
+        res.json({ msg: 'database error saving user', error })
+        return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
+      }
+
+      // TODO send answered question with analysis to client
+
+      // send updated user
+      res.json(user)
+    })
 
   })
 
@@ -69,13 +102,13 @@ router.post('/register', (req, res) => {
         password,
       })
       
-      // TODO Salt and Hash password with bcryptjs, then save new user 
+      // TODO Salt and Hash password with bcrypt-js, then save new user 
 
       newUser.save((error, user) => {  
         if (error) { 
           // TODO send error status to client
           return toolbox.logError(error) 
-        };
+        }
         res.json({ message: 'Creating New User!', user });
       })
     }
@@ -94,15 +127,21 @@ router.post('/login', (req, res) => {
       return toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
     }
     if(!user){
+      // user was not found
+      // TODO send error status to client
       return res.json({ msg: 'User not found', email, password })
     }
 
     // TODO bcrypt compare passwords
 
     if(password !== user.password){
+
       // TODO create jwt token payload
+
       // TODO sign token
+
       // TODO send jwt token
+
       return res.json({ msg: 'Passwords do not match', email, password, user })
     } else {
       // TODO send status to client
