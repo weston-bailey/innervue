@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const User = require('../models/User');
@@ -19,7 +19,7 @@ module.exports = passport => {
   }
 
   passport.use(new JwtStrategy(options, (jwt_payload, done) => {
-    // find User MOdel
+    // find User Model
     User.findById(jwt_payload.id)
       .then(user => {
         if(user) {
@@ -27,7 +27,7 @@ module.exports = passport => {
           return done(null, user);
         }
         // If no user is found
-        return done(null, false)
+        return done(null, false);
       })
       .catch(error => {
         toolbox.logError('/config/passport.js', 'module.exports', 'User.findById()', error);
@@ -35,4 +35,4 @@ module.exports = passport => {
   }));
 };
 
-// module.exports = () => { toolbox.log(`passport config`) }
+

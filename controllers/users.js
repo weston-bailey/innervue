@@ -1,9 +1,13 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
-
-// load user model
-const User = require('../models/User');
 const toolbox = require('../private/toolbox');
+// for auth
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const passport = require('passport');
+// load mongoDB user model
+const User = require('../models/User');
 
 // test route
 router.get('/', (req, res) => {
@@ -153,6 +157,55 @@ router.post('/login', (req, res) => {
 router.get('/current', (req, res) => {
   // TODO send user info
   res.send('<h1>🦘 Check user auth credentials 🦘</h1>');
+});
+
+// AUTH ROUTES FOR TESTING TODO: REMOVE/Inegrate with app routes
+
+// do registration auth and create a new user
+router.post('/auth/register', (req, res) => {
+  // data from request body (all are required to write to the database)
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  let email = req.body.email;
+  let password = req.body.password;
+
+  User.findOne({ email }, (error, user) => {
+    if (error) {
+      // send status 500 server error
+      res.status(500).json({ message: 'internal database error finding user! Please try again.', error });
+      return toolbox.logError('users.js', 'POST /register', 'User.findOne()', error)
+    }
+    if(user){
+      // if user is found respond with status 400 bad request
+      // TODO stop sending user object
+      return res.status(400).json({ message: 'Email already exists in database', user});
+    } else {
+      // if user is not found create a new one
+      // create new user
+      let newUser = new User({
+        firstName,
+        lastName,
+        email,
+        password,
+      })
+      
+      // TODO Salt and Hash password with bcrypt-js, then save new user 
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(newUser.password, salt, (err, hash) => {
+          if(err) throw err;
+          newUser.password = hash;
+          newUser.save((error, user) => {  
+            if (error) { 
+              // send status 500 server error
+              res.status(500).json({ message: 'internal database error saving user! Please try again.', error });
+              return toolbox.logError('users.js', 'POST /register', 'newUser()', error) 
+            }
+            res.json({ message: 'Created New User!', user });
+          })
+        })
+      })
+    }
+  })
 });
 
 module.exports = router;
