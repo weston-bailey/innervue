@@ -35,13 +35,13 @@ router.get('/:userId/questions', (req, res) => {
   })
 });
 
-// contact google sentiment API and add answered question to user
+// contact google nl API and add answered question to user
 router.post('/:userId/questions', (req, res) => {
   // URL query string
   let userId = req.params.userId;
   // request body params: preformatted JSON of the question that was answered
   let question = req.body
-
+  console.log(question)
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
       // TODO send error status to client
@@ -71,7 +71,7 @@ router.post('/:userId/questions', (req, res) => {
 
       // TODO send answered question with analysis to client
 
-      // send updated user
+      // send updated user --> want it to send back the analyzed question
       res.json(user)
     })
 
