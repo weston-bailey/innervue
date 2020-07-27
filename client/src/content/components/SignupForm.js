@@ -1,5 +1,7 @@
   
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -46,7 +48,64 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignupForm() {
+  // register form state for user input fields
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // redirect state if new user is made
+  const [redirect, setRedirect] = useState(false);
+  // if a status message should be shown from the server
+  const [showStatusMessage, setShowStatusMessage] = useState(false);
+  // the message form the server
+  const [statusMessage, setStatusMessage] = useState(false);
+
   const classes = useStyles();
+
+  const handleFirstName = (e) => {
+    setFirstName(e.target.value);
+  }
+
+  const handleLastName = (e) => {
+    setLastName(e.target.value);
+  }
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+  }
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const newUser = {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    }
+    console.log(newUser)
+    // non auth test route: http://localhost:3001/users/register
+    axios.post('http://localhost:3001/users/auth/register', newUser)
+      .then(response => {
+        console.log(response.data.message);
+
+        if(response.status === 201){
+          // response.staus is 201 (created) then redirect
+          console.log('true')
+          setRedirect(true)
+        } else {
+            setStatusMessage(response.data.message);
+            setShowStatusMessage(true);
+        }
+
+      })
+        .catch(err => console.log(err));
+  }
+  // redirect to feedback if user is successful in making a new account 
+  if (redirect) return <Redirect to="/feedback" />
 
   return (
     <Container component="main" maxWidth="xs">
@@ -58,7 +117,7 @@ export default function SignupForm() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={ handleSubmit }>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
               <TextField
@@ -70,6 +129,7 @@ export default function SignupForm() {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                onChange={ handleFirstName }
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -81,6 +141,7 @@ export default function SignupForm() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                onChange={ handleLastName }
               />
             </Grid>
             <Grid item xs={12}>
@@ -92,6 +153,7 @@ export default function SignupForm() {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={ handleEmail }
               />
             </Grid>
             <Grid item xs={12}>
@@ -104,6 +166,7 @@ export default function SignupForm() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                onChange={ handlePassword }
               />
             </Grid>
             <Grid item xs={12}>
