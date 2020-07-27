@@ -1,7 +1,6 @@
 // required modules
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 // for logging
@@ -13,14 +12,14 @@ const rowdy = require('rowdy-logger');
 const app = express();
 const rowdyResults = rowdy.begin(app);
 
-// private modules
+// Bodyparser middlewares
+app.use(express.urlencoded({extended: false}));
+app.use(express.json());
+
+// private modules/middlwares
 app.use(express.static(__dirname + '/private'));
 
-// BodyParser Middleware
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json());
-
-// Cors Middleware
+// cors Middleware
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
@@ -61,6 +60,9 @@ require('./config/passport')(passport);
 // route controllers
 app.use('/users', require('./controllers/users'));
 
+// check for enviromenmtal variable errors
+toolbox.envError();
+
 // initialize app on port
 const port = process.env.PORT || 3001;
 
@@ -68,6 +70,3 @@ app.listen(port, () => {
   rowdyResults.print();
   console.log(chalk.black.bgYellow(` ~~~listening on port: ${port}~~~ `)); 
 });
-
-// check for enviromenmtal variable errors
-toolbox.envError();
