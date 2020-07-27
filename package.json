@@ -28,6 +28,7 @@
     "d3": "^5.16.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "ibm-watson": "^5.6.1",
     "json-beautify": "^1.1.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.25",
