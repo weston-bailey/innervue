@@ -97,7 +97,7 @@ User.findOne({ email: 'test4@test.com' }, (error, user) => {
       key2: 'test key2'
     }
   })
-  user.save(error => {  if (error) return toolbox.logError(error) })
+  user.save(error => { if (error) return toolbox.logError(error) })
   toolbox.log('Saved User', user, user.answeredQuestions);
 
 })
