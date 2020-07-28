@@ -95,8 +95,8 @@ export default function LoginForm(props) {
         // Set current user
         setRedirect(true)
       } else {
-          setStatusMessage(response.data.message);
-          setShowStatusMessage(true);
+        setStatusMessage(response.data.message);
+        setShowStatusMessage(true);
       }
 
     })
@@ -108,6 +108,7 @@ export default function LoginForm(props) {
 
   return (
     <Container component="main" maxWidth="xs">
+      { statusMessage }
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

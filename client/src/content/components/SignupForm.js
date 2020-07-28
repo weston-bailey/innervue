@@ -50,8 +50,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignupForm(props) {
 
-  console.log(props, "props")
-
   const classes = useStyles();
 
   // register form state for user input fields
@@ -64,7 +62,7 @@ export default function SignupForm(props) {
   // if a status message should be shown from the server
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   // the message form the server
-  const [statusMessage, setStatusMessage] = useState(false);
+  const [statusMessage, setStatusMessage] = useState('');
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -90,15 +88,12 @@ export default function SignupForm(props) {
       email: email,
       password: password,
     }
-    console.log(newUser)
+
     // non auth test route: http://localhost:3001/users/register
     axios.post('http://localhost:3001/users/auth/register', newUser)
       .then(response => {
-        console.log(response.data.message);
-
         if(response.status === 201){
           // response.staus is 201 (created) then redirect
-          // response.staus if user is found and logged in
           const { token } = response.data;
           console.log('true')
           // Save to LocalStorage
@@ -112,18 +107,22 @@ export default function SignupForm(props) {
           // Set current user
           setRedirect(true)
         } else {
+          console.log('hit')
             setStatusMessage(response.data.message);
             setShowStatusMessage(true);
         }
 
       })
-        .catch(err => console.log(err));
+      .catch(error => {
+        console.log(error)
+      }); 
   }
   // redirect to feedback if user is successful in making a new account 
   if (redirect) return <Redirect to="/feedback" />
 
   return (
     <Container component="main" maxWidth="xs">
+      { statusMessage }
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
