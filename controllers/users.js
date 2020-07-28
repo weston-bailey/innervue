@@ -43,9 +43,9 @@ router.post('/:userId/questions', (req, res) => {
 
   // URL query string
   let userId = req.params.userId;
-  // request body params: preformatted JSON of the question that was answered
-  let question = req.body.answer
-  console.log(question)
+  // question, user's answer and category
+  let question = req.body
+
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
       // TODO send error status to client
@@ -58,63 +58,52 @@ router.post('/:userId/questions', (req, res) => {
       return res.json({ message: 'User id not found'  })
     }
 
-  // TODO Contact google API
-  const text = question
-  // The text to analyze
-  const document = {
-    content: text,
-    type: `PLAIN_TEXT`,
-  };
+    // perfrom call APIs, perform analysis on user's answer, 
+    (async text => {
+      // Instantiates a client
+      const client = new language.LanguageServiceClient();
 
-  async function googleCloud(document) {
-    // Instantiates a client
-    const client = new language.LanguageServiceClient();
+      // format user's answer into a google langauge document
+      const document = {
+        content: text,
+        type: `PLAIN_TEXT`,
+      };
 
-    // hit all APIs at same time, don't proceed until all have responded
-    const [analyzeSentiment, analyzeEntities, /*analyzeSyntax,*/ analyzeEntitySentiment] = await Promise.all([
-      client.analyzeSentiment({document: document}),
-      client.analyzeEntities({document: document}), 
-      // client.analyzeSyntax({document: document}),
-      client.analyzeEntitySentiment({document: document}),
-    ]);
+      // hit the google APIs at same time, don't proceed until all have responded
+      const [analyzeSentiment, analyzeEntitySentiment] = await Promise.all([
+        client.analyzeSentiment({document: document}),
+        client.analyzeEntitySentiment({document: document}),
+      ]);
 
-    // load up an object with data from the APIs
-    let payload = {
-      analyzeSentiment,
-      analyzeEntities,
-      // analyzeSyntax,
-      analyzeEntitySentiment
-    }
+      // load up an object with data from the APIs
+      let payload = {
+        analyzeSentiment,
+        analyzeEntitySentiment
+      }
 
-    // make it pretty
-    print = beautify(payload, null, 2, 10);   
-    console.log(print) 
-  }
+      // make it pretty to explore on the console
+      print = beautify(payload, null, 2, 10);   
+      console.log(print) ;
 
-  googleCloud(document);
 
-    // TODO format user feedback based on sentiment analysis
+      // TODO format user feedback based on sentiment analysis
 
-    // TODO mount analysis on question
+      // TODO mount analysis on question
 
-    // update user in database
-    user.answeredQuestions.push(question)
-    // console.log(user)
-    // user.save((error, user) => {
-    //   if (error) { 
-    //     // TODO send error status to client
-    //     res.json({ message: 'database error saving user', error })
-    //     return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
-    //   }
-
-    //   // TODO send answered question with analysis to client
-
-    //   // send updated user --> want it to send back the analyzed question
-    //   res.json(user)
-    // })
-
+      // push question to user's embedded question document
+      user.answeredQuestions.push(question);
+      // save user in database
+      user.save((error, user) => {
+        if (error) { 
+          // TODO send error status to client
+          res.json({ message: 'database error saving user', error })
+          return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
+        }
+        // respond to client with question
+        res.json(question)
+      })
+    })(question.answer);
   })
-
 });
 
 // do registration auth and create a new user
