@@ -44,41 +44,36 @@
 
 .feedback-form{
   /* background-color: #90caf9; */
+  border: 1px solid black;
   border-radius: 10px;
   width: 44vw;
-  margin-left: 20vw;
+  /* margin-left: 20vw; */
   margin-top: 3vw;
 }
 
 .feedback-form-box{
   width: 40vw;
-  margin-left: 2vw;
-  margin-bottom: 2vw;
-  border: 1px solid #90caf9;
+  opacity: 90%;
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
+  border: none;
 }
 
 .feedback-buttons-row{
-  width: 44vw;
   padding-bottom: 0.5em;
-  /* text-align: center; */
-  /* border: 1px solid black; */
   display: flex;
   justify-content: space-evenly;
 }
 
 .feedback-instructions{
   /* border: 1px solid black; */
-  display: flex;
-  justify-content: center;
-  width: 44vw;
+  text-align: left;
 }
 
 .speech-results{
   width: 40vw;
-  margin-left: 2vw;
-  margin-bottom: 2vw;
+  /* margin-left: 2vw; */
+  /* margin-bottom: 2vw; */
   /* border: 1px solid black; */
   border-radius: 5px;
   height: 10em;
@@ -89,4 +84,24 @@
 .feedbackBtn{
   text-align: center;
   /* border: 1px solid black; */
+}
+
+.form-card{
+  /* border: 1px solid black; */
+  background-image: url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60");
+  background-repeat: no-repeat;
+  background-size: cover;
+  text-align: center;
+  width: 44vw;
+  height: 44vw;
+}
+
+.caption{
+  color: rgb(127, 136, 139);
+}
+
+.big-feedback{
+  border-bottom: 3px solid rgb(25, 60, 177);
+  padding: 4vw;
+  display: flex;
 }

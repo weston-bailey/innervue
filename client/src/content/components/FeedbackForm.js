@@ -6,6 +6,7 @@ import Container from '@material-ui/core/Container';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import Typography from '@material-ui/core/Typography';
 import StopIcon from '@material-ui/icons/Stop';
+import Card from '@material-ui/core/Card';
 import Axios from 'axios';
 
 
@@ -77,95 +78,84 @@ const FeedbackForm = () => {
     }
 
     const displaySpeechForm = (
-        <Container 
+        <Card className="form-card"
         maxWidth="sm">
-            <div className="feedback-form">
+            <div className="feedback-buttons-row">
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<KeyboardVoiceIcon />}
+                    onClick={startListening}
+                >
+                Start
+                </Button>
+                <Button onClick={() => {
+                    stopListening()}
+                }
+                startIcon={<StopIcon/>}
+                variant="contained"
+                color="secondary"
+                >Stop</Button>
+                <Button onClick={resetTranscript}
+                variant="contained"
+                color="secondary"
+                >Reset</Button>
+            </div>
             <form className="feedbackBtn" onSubmit={
                 handleSubmit}>
-                <div className="feedback-instructions">
-                <Typography variant="h6">Speak or type!
-                </Typography>
-                </div>
                     <br />
-                    <div>
-                    <div className="feedback-buttons-row">
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<KeyboardVoiceIcon />}
-                        onClick={startListening}
-                    >
-                    Start
-                    </Button>
-                    <Button onClick={() => {
-                        stopListening()}
-                    }
-                    startIcon={<StopIcon/>}
-                    variant="contained"
-                    color="secondary"
-                    >Stop</Button>
-                    <Button onClick={resetTranscript}
-                    variant="contained"
-                    color="secondary"
-                    >Reset</Button>
-                    </div>
-                    <TextareaAutosize 
-                        name="answer"
-                        className="speech-results"
-                        rowsMin={15}
-                        value={transcript}
-                        >Transcription:
-                    </TextareaAutosize>
+                <div>
+                <TextareaAutosize 
+                    name="answer"
+                    className="speech-results"
+                    rowsMin={25}
+                    value={transcript}
+                    >Transcription:
+                </TextareaAutosize>
                 </div>
                     <Button variant="contained" color="secondary" type="submit">Get Feedback</Button>
             </form>
-        </div>
-    </Container>
+    </Card>
     )
 
     const displayWriteForm = (
-        <Container
+        <Card className="form-card"
             maxWidth="sm">
-            <form onSubmit={handleSubmit}>
-                <div className="feedback-form">
-                    <div className="feedback-instructions">
-                    <Typography variant="h6">Speak or type!
-                    </Typography>
-                    </div>
-                        <br />
-                    <div className="feedback-buttons-row">
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={<KeyboardVoiceIcon />}
-                        onClick={startListening}
-                    >
-                    Start
-                    </Button>
-                    <Button onClick={() => {
-                        stopListening()}
-                    }
-                    startIcon={<StopIcon/>}
+            <div className="feedback-buttons-row">
+                <Button
                     variant="contained"
                     color="secondary"
-                    >Stop</Button>
-                    <Button onClick={resetTranscript}
-                    variant="contained"
-                    color="secondary"
-                    >Reset</Button>
-                    </div>
-                    <TextareaAutosize 
-                        className="feedback-form-box"
-                        name="answer"
-                        onChange={handleInputChange}
-                        rowsMin={15}>
-                    </TextareaAutosize>
-                    <div className="feedbackBtn">
-                    <Button variant="contained" color="secondary" onSubmit={handleSubmit} type="submit">Get Feedback</Button>
-                    </div>
+                    startIcon={<KeyboardVoiceIcon />}
+                    onClick={startListening}
+                >
+                Start
+                </Button>
+                <Button onClick={() => {
+                    stopListening()}
+                }
+                startIcon={<StopIcon/>}
+                variant="contained"
+                color="secondary"
+                >Stop</Button>
+                <Button onClick={resetTranscript}
+                variant="contained"
+                color="secondary"
+                >Reset</Button>
+                </div>
+            <form onSubmit={handleSubmit}>    
+            
+            <br />
+                <TextareaAutosize 
+                    className="feedback-form-box"
+                    name="answer"
+                    onChange={handleInputChange}
+                    rowsMin={25}>
+                </TextareaAutosize>
+                <div className="feedbackBtn">
+                <Button variant="contained" color="secondary" onSubmit={handleSubmit} type="submit">Get Feedback</Button>
                 </div>
             </form>
-        </Container>
+        </Card>
     )
 
     // get one where we are talking into it, or one where we are supposed to write

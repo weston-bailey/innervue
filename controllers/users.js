@@ -71,10 +71,10 @@ router.post('/:userId/questions', (req, res) => {
     const client = new language.LanguageServiceClient();
 
     // hit all APIs at same time, don't proceed until all have responded
-    const [analyzeSentiment, analyzeEntities, analyzeSyntax, analyzeEntitySentiment] = await Promise.all([
+    const [analyzeSentiment, analyzeEntities, /*analyzeSyntax,*/ analyzeEntitySentiment] = await Promise.all([
       client.analyzeSentiment({document: document}),
       client.analyzeEntities({document: document}), 
-      client.analyzeSyntax({document: document}),
+      // client.analyzeSyntax({document: document}),
       client.analyzeEntitySentiment({document: document}),
     ]);
 
@@ -82,7 +82,7 @@ router.post('/:userId/questions', (req, res) => {
     let payload = {
       analyzeSentiment,
       analyzeEntities,
-      analyzeSyntax,
+      // analyzeSyntax,
       analyzeEntitySentiment
     }
 
@@ -100,18 +100,18 @@ router.post('/:userId/questions', (req, res) => {
     // update user in database
     user.answeredQuestions.push(question)
     // console.log(user)
-    user.save((error, user) => {
-      if (error) { 
-        // TODO send error status to client
-        res.json({ msg: 'database error saving user', error })
-        return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
-      }
+    // user.save((error, user) => {
+    //   if (error) { 
+    //     // TODO send error status to client
+    //     res.json({ msg: 'database error saving user', error })
+    //     return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
+    //   }
 
-      // TODO send answered question with analysis to client
+    //   // TODO send answered question with analysis to client
 
-      // send updated user --> want it to send back the analyzed question
-      res.json(user)
-    })
+    //   // send updated user --> want it to send back the analyzed question
+    //   res.json(user)
+    // })
 
   })
 
