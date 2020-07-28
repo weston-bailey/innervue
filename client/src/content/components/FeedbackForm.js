@@ -2,9 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import Button from '@material-ui/core/Button'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-import Container from '@material-ui/core/Container';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
-import Typography from '@material-ui/core/Typography';
 import StopIcon from '@material-ui/icons/Stop';
 import Card from '@material-ui/core/Card';
 import Axios from 'axios';
@@ -113,7 +111,7 @@ const FeedbackForm = () => {
                     >Transcription:
                 </TextareaAutosize>
                 </div>
-                    <Button variant="contained" color="secondary" type="submit">Get Feedback</Button>
+                    <Button className="where" variant="contained" color="secondary" type="submit">Get Feedback</Button>
             </form>
     </Card>
     )
