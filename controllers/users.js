@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const toolbox = require('../private/toolbox');
+// Imports the Google Cloud client library
+const language = require(`@google-cloud/language`);
+const beautify = require("json-beautify");
 // for auth
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -37,6 +40,7 @@ router.get('/:userId/questions', (req, res) => {
 
 // contact google nl API and add answered question to user
 router.post('/:userId/questions', (req, res) => {
+
   // URL query string
   let userId = req.params.userId;
   // request body params: preformatted JSON of the question that was answered
@@ -54,7 +58,51 @@ router.post('/:userId/questions', (req, res) => {
       return res.json({ msg: 'User id not found', userId })
     }
 
-    // TODO Contact google API
+  // // TODO Contact google API
+  // const text = question
+  // // The text to analyze
+  // const document = {
+  //   content: text,
+  //   type: `PLAIN_TEXT`,
+  // };
+
+  // async function googleCloud(document) {
+  //   // Instantiates a client
+  //   const client = new language.LanguageServiceClient();
+
+  //   // hit all APIs at same time, don't proceed until all have responded
+  //   const [analyzeSentiment, analyzeEntities, analyzeSyntax, analyzeEntitySentiment] = await Promise.all([
+  //     client.analyzeSentiment({document: document}),
+  //     client.analyzeEntities({document: document}), 
+  //     client.analyzeSyntax({document: document}),
+  //     client.analyzeEntitySentiment({document: document}),
+  //   ]);
+
+  //   // load up an object with data from the APIs
+  //   let payload = {
+  //     analyzeSentiment,
+  //     analyzeEntities,
+  //     analyzeSyntax,
+  //     analyzeEntitySentiment
+  //   }
+
+  //   // make it pretty
+  //   print = beautify(payload, null, 2, 10);   
+  //   console.log(print) 
+
+  //   // where we want to take whatever content we want from the answered question object
+  //   // take the req.body.answer
+  //   // would need to create new answered question before pushing into the array
+  //   // make sure we are only creating the new object when all info is returned back
+  //   // whatever function that comes next is prepared for the payload data
+  //   // answeredQObject = {
+  //   //   category: ,
+  //   //   content: , 
+  //   //   answer:
+  //   // }
+  // }
+
+  // googleCloud(document);
 
     // TODO format user feedback based on sentiment analysis
 
@@ -62,6 +110,7 @@ router.post('/:userId/questions', (req, res) => {
 
     // update user in database
     user.answeredQuestions.push(question)
+    // console.log(user)
     user.save((error, user) => {
       if (error) { 
         // TODO send error status to client

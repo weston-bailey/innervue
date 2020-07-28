@@ -21,14 +21,15 @@ const FeedbackForm = () => {
         
     // here we will handle the change in the text user types
     const handleInputChange = e => {
-        e.persist();
-        // console.log(`Making a change to ${e.target.name}`)
+        // e.persist();
+        console.log(`Making a change to ${e.target.name}`)
         setInputs({...inputs, [e.target.name]: e.target.value})
       }
     
     const startListening = () => {
         SpeechRecognition.startListening({ continuous: true })
         setIsListening(true)
+        setInputs(transcript)
     }
 
     const stopListening = () => {
@@ -53,11 +54,11 @@ const FeedbackForm = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        console.log(typeof inputs)
+        console.log(transcript)
         Axios.post(`http://localhost:3001/users/5f1f1cfa9b514a6ab4df5d66/questions`, inputs)
             .then(response => {
                 if (response.status === 200) {
-                    console.log(response)
+                    console.log(response.data.answeredQuestions)
                     console.log("🌴")
                     setCreateEntry(true)
                 } else {
@@ -71,7 +72,8 @@ const FeedbackForm = () => {
         <Container 
         maxWidth="sm">
             <div className="feedback-form">
-            <form className="feedbackBtn" onSubmit={handleSubmit}>
+            <form className="feedbackBtn" onSubmit={
+                handleSubmit}>
                 <div className="feedback-instructions">
                 <Typography variant="h6">Speak or type!
                 </Typography>
@@ -101,11 +103,10 @@ const FeedbackForm = () => {
                     </div>
                     <TextareaAutosize 
                         name="answer"
-                        variant="outlined"
                         className="speech-results"
                         rowsMin={15}
                         value={transcript}
-                        onChange={handleInputChange}
+                        onChange={(e) => {handleInputChange(e)} }
                         >Transcription:
                     </TextareaAutosize>
                 </div>
@@ -148,7 +149,6 @@ const FeedbackForm = () => {
                     </div>
                     <TextareaAutosize 
                         className="feedback-form-box"
-                        variant="outlined"
                         name="answer"
                         onChange={handleInputChange}
                         rowsMin={15}>
