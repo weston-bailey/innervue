@@ -2,6 +2,9 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const toolbox = require('../private/toolbox');
+// Imports the Google Cloud client library
+const language = require(`@google-cloud/language`);
+const beautify = require("json-beautify");
 // for auth
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -37,10 +40,11 @@ router.get('/:userId/questions', (req, res) => {
 
 // contact google nl API and add answered question to user
 router.post('/:userId/questions', (req, res) => {
+
   // URL query string
   let userId = req.params.userId;
   // request body params: preformatted JSON of the question that was answered
-  let question = req.body
+  let question = req.body.answer
   console.log(question)
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
@@ -54,7 +58,40 @@ router.post('/:userId/questions', (req, res) => {
       return res.json({ msg: 'User id not found', userId })
     }
 
-    // TODO Contact google API
+  // TODO Contact google API
+  const text = question
+  // The text to analyze
+  const document = {
+    content: text,
+    type: `PLAIN_TEXT`,
+  };
+
+  async function googleCloud(document) {
+    // Instantiates a client
+    const client = new language.LanguageServiceClient();
+
+    // hit all APIs at same time, don't proceed until all have responded
+    const [analyzeSentiment, analyzeEntities, /*analyzeSyntax,*/ analyzeEntitySentiment] = await Promise.all([
+      client.analyzeSentiment({document: document}),
+      client.analyzeEntities({document: document}), 
+      // client.analyzeSyntax({document: document}),
+      client.analyzeEntitySentiment({document: document}),
+    ]);
+
+    // load up an object with data from the APIs
+    let payload = {
+      analyzeSentiment,
+      analyzeEntities,
+      // analyzeSyntax,
+      analyzeEntitySentiment
+    }
+
+    // make it pretty
+    print = beautify(payload, null, 2, 10);   
+    console.log(print) 
+  }
+
+  googleCloud(document);
 
     // TODO format user feedback based on sentiment analysis
 
@@ -62,18 +99,19 @@ router.post('/:userId/questions', (req, res) => {
 
     // update user in database
     user.answeredQuestions.push(question)
-    user.save((error, user) => {
-      if (error) { 
-        // TODO send error status to client
-        res.json({ msg: 'database error saving user', error })
-        return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
-      }
+    // console.log(user)
+    // user.save((error, user) => {
+    //   if (error) { 
+    //     // TODO send error status to client
+    //     res.json({ msg: 'database error saving user', error })
+    //     return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
+    //   }
 
-      // TODO send answered question with analysis to client
+    //   // TODO send answered question with analysis to client
 
-      // send updated user --> want it to send back the analyzed question
-      res.json(user)
-    })
+    //   // send updated user --> want it to send back the analyzed question
+    //   res.json(user)
+    // })
 
   })
 
