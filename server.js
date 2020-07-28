@@ -3,6 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cors = require('cors');
 // for logging
 const toolbox = require('./private/toolbox');
 const chalk = require('chalk');
@@ -20,12 +21,7 @@ app.use(express.json());
 app.use(express.static(__dirname + '/private'));
 
 // cors Middleware
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
-  next();
-});
+app.use(cors());
 
 // database setup af connection (options are to supress console warnings)
 const mongooseOptions = { 

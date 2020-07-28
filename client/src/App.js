@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Component } from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route, Link, Redirect} from "react-router-dom";
 import jwt_decode from 'jwt-decode';
@@ -17,13 +17,13 @@ import CareerTips from './content/pages/CareerTips';
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-
-  const user = localStorage.getItem(`jwtToken`);
+  // get user via jwt token to confirm user authenticated
+  const user = localStorage.getItem('jwtToken')
+  
+  // setup a return based on user status
   return <Route {...rest} render={(props) => (
-      user
-          ? <Component {...rest} {...props} />
-          : <Redirect to='/login' />
-      )} 
+    user ? <Component {...rest} {...props} /> : <Redirect to='/login' />
+  )}
   />
 }
 
@@ -66,11 +66,12 @@ function App() {
         <CssBaseline />
         <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} />
         <Route exact path="/" component={Home} />
-        <PrivateRoute exact path='/myresponse' component={MyResponses} user={currentUser} />
-        {/* <Route exact path='/myresponses' component={MyResponses} /> */}
-        <Route exact path='/feedback' component={GetFeedback} />
+        <PrivateRoute exact path='/myresponses' component={MyResponses} user={currentUser} />
+        <PrivateRoute exact path='/feedback' component={GetFeedback} user={currentUser} />
+        {/* <Route exact path='/feedback' component={GetFeedback} /> */}
         <Route exact path='/login' render={ (props) => <Login {...props} nowCurrentUser={nowCurrentUser} setIsAuthenticated={setIsAuthenticated} user={currentUser} /> } />
-        <Route exact path='/signup' component={SignupPage} />
+        <Route exact path='/signup' render={ (props) => <SignupPage {...props} nowCurrentUser={nowCurrentUser} setIsAuthenticated={setIsAuthenticated} user={currentUser} /> } />
+        {/* <Route exact path='/signup' component={SignupPage} /> */}
         <Route exact path='/tips' component={CareerTips} />
         <Footer />
       </ThemeProvider>

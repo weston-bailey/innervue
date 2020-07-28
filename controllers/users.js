@@ -14,7 +14,7 @@ const User = require('../models/User');
 
 // test route
 router.get('/', (req, res) => {
-  res.json({ msg: 'Welcome to the users endpoint'});
+  res.json({ message: 'Welcome to the users endpoint'});
 });
 
 // get user's answered questions from database
@@ -24,13 +24,13 @@ router.get('/:userId/questions', (req, res) => {
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
       // TODO send error status to client
-      res.json({ msg: 'database error finding user', error })
+      res.json({ message: 'database error finding user', error })
       return toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
     }
     if(!user){
       // user not found in database
       // TODO send error status to client
-      return res.json({ msg: 'User id not found', userId })
+      return res.json({ message: 'User id not found' })
     }
     // send user's answred questions to client
     res.json(user.answeredQuestions);
@@ -49,13 +49,13 @@ router.post('/:userId/questions', (req, res) => {
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
       // TODO send error status to client
-      res.json({ msg: 'database error finding user', error })
+      res.json({ message: 'database error finding user', error })
       return toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
     }
     if(!user){
       // user not found in database
       // TODO send error status to client
-      return res.json({ msg: 'User id not found', userId })
+      return res.json({ message: 'User id not found'  })
     }
 
   // TODO Contact google API
@@ -103,7 +103,7 @@ router.post('/:userId/questions', (req, res) => {
     // user.save((error, user) => {
     //   if (error) { 
     //     // TODO send error status to client
-    //     res.json({ msg: 'database error saving user', error })
+    //     res.json({ message: 'database error saving user', error })
     //     return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
     //   }
 
@@ -133,7 +133,7 @@ router.post('/register', (req, res) => {
     if(user){
       // if user is found respond with user object
       // TODO respond with status to client
-      res.json({ message: 'User Already Exists!', user });
+      res.json({ message: 'User Already Exists!' });
     } else {
       // if user is not found create a new one
       // create new user
@@ -151,7 +151,7 @@ router.post('/register', (req, res) => {
           // TODO send error status to client
           return toolbox.logError(error) 
         }
-        res.json({ message: 'Creating New User!', user });
+        res.json({ message: 'Creating New User!' });
       })
     }
   })
@@ -171,7 +171,7 @@ router.post('/login', (req, res) => {
     if(!user){
       // user was not found
       // TODO send error status to client
-      return res.json({ msg: 'User not found', email, password })
+      return res.json({ message: 'User not found' })
     }
 
     // TODO bcrypt compare passwords
@@ -184,10 +184,10 @@ router.post('/login', (req, res) => {
 
       // TODO send jwt token
 
-      return res.json({ msg: 'Passwords do not match', email, password, user })
+      return res.json({ message: 'Passwords do not match'  })
     } else {
       // TODO send status to client
-      return res.json({ msg: 'User Found, credentials matche!', email, password, user })
+      return res.json({ message: 'User Found, credentials match!' })
     }
   })
 });
@@ -215,7 +215,7 @@ router.post('/auth/login', (req, res) => {
     if(!user){
       // if user is not found respond with status 400 bad request
       // TODO stop sending email and password back
-      return res.status(400).json({ message: 'No user found with that email!', email, password});
+      return res.status(200).json({ message: 'No user found with that email!' });
     }
 
     // bcrypt compare passwords
@@ -228,7 +228,7 @@ router.post('/auth/login', (req, res) => {
           firstName: user.firstName, 
           lastName: user.lastName, 
           fullName: user.getFullName(),
-          answeredQuestions: user.answeredQuestions 
+          // answeredQuestions: user.answeredQuestions 
         }
 
         // Sign token
@@ -238,12 +238,12 @@ router.post('/auth/login', (req, res) => {
             res.status(500).json({ message: 'Internal jwt token error authorizing user! Please try again.', error });
             return toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
           }
-
-          return res.json({ success: true, token: 'Bearer ' + token })
+          // send status 201 if sign in successful
+          return res.status(201).json({ success: true, token: 'Bearer ' + token })
         });
       } else {
         // send status 400 if password is incorrect
-        return res.status(400).json({ message: 'Password or email is incorrect' })
+        return res.status(200).json({ message: 'Password or email is incorrect' })
       }
     })
   })
@@ -267,7 +267,7 @@ router.post('/auth/register', (req, res) => {
     if(user){
       // if user is found respond with status 400 bad request
       // TODO stop sending user object
-      return res.status(400).json({ message: 'Email already exists in database', user});
+      return res.status(200).json({ message: 'Email already exists in database' });
     } else {
       // if user is not found create a new one
       // create new user
@@ -300,7 +300,25 @@ router.post('/auth/register', (req, res) => {
               return toolbox.logError('users.js', 'POST /register', 'newUser()', error) 
             }
 
-            res.json({ message: 'Created New User!', user });
+            // once new user is saved create and send JSON Web Token
+            const payload = { 
+              id: user.id, 
+              firstName: user.firstName, 
+              lastName: user.lastName, 
+              fullName: user.getFullName(),
+              // answeredQuestions: user.answeredQuestions 
+            }
+
+            // Sign token
+            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
+              if (error) {
+                // send status 500 server error
+                res.status(500).json({ message: 'Internal jwt token error authorizing user! Please try again.', error });
+                return toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
+              }
+              // send status 201 if sign in successful
+              return res.status(201).json({ success: true, token: 'Bearer ' + token })
+            });
           })
 
         })
@@ -310,7 +328,7 @@ router.post('/auth/register', (req, res) => {
 });
 
 router.get('/auth/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-  // res.json({ msg: 'Success' })
+  // res.json({ message: 'Success' })
   // res.json(req.user);
   // respond wit user data -- TODO figure out what kind of request to hit this route with
   res.json({ 

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -49,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LoginForm(props) {
-  console.log('login form')
-  console.log(props)
+  // console.log('login form props:')
+  // console.log(props)
   const classes = useStyles();
   // register form state for user input fields
   const [email, setEmail] = useState('');
@@ -76,16 +78,25 @@ export default function LoginForm(props) {
       email: email,
       password: password,
     }
-    console.log('hit')
     axios.post('http://localhost:3001/users/auth/login', credentials)
     .then(response => {
       if(response.status === 201){
         // response.staus if user is found and logged in
-        console.log('true')
+        const { token } = response.data;
+        console.log(token)
+        // Save to LocalStorage
+        localStorage.setItem('jwtToken', token);
+        // Set token to Auth Header
+        setAuthToken(token);
+        // Decode token to get user data
+        const decoded = jwt_decode(token);
+        // set current user (in App.js)
+        props.nowCurrentUser(decoded)
+        // Set current user
         setRedirect(true)
       } else {
-          setStatusMessage(response.data.message);
-          setShowStatusMessage(true);
+        setStatusMessage(response.data.message);
+        setShowStatusMessage(true);
       }
 
     })
@@ -97,6 +108,7 @@ export default function LoginForm(props) {
 
   return (
     <Container component="main" maxWidth="xs">
+      { statusMessage }
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
