@@ -3,7 +3,7 @@ import FeedbackForm from '../components/FeedbackForm';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 
-const GetFeedback = () => {
+const GetFeedback = (props) => {
     return (
         <Container className="big-feedback">
             <Container>

@@ -90,6 +90,8 @@ export default function LoginForm(props) {
         setAuthToken(token);
         // Decode token to get user data
         const decoded = jwt_decode(token);
+        // set current user (in App.js)
+        props.nowCurrentUser(decoded)
         // Set current user
         setRedirect(true)
       } else {
