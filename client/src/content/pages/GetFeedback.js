@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box } from '@material-ui/core'
+import QuestionSelector from '../components/QuestionSelector'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -42,11 +43,14 @@ const GetFeedback = (props) => {
                                 <p>Talk or type in the text box and submit to get instant feedback on your response!</p>
                             </Grid> 
                         </div>
-                        <Grid container spacing={12}>
-                            <Grid item xs={4}>
+                        <Grid container spacing={6}>
+                            <Grid item xs={6}>
                             <FeedbackForm className={classes.feedback}/>
                             </Grid>
-                        </Grid>
+                            <Grid item xs={5}>
+                            <QuestionSelector/>
+                        </Grid>   
+                        </Grid>   
                     </Box>
                 </Grid>
             </Grid>
