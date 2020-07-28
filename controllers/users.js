@@ -5,6 +5,8 @@ const toolbox = require('../private/toolbox');
 // Imports the Google Cloud client library
 const language = require(`@google-cloud/language`);
 const beautify = require("json-beautify");
+// Imports IBM watson tone analyzer
+const ToneAnalyzerV3 = require('ibm-watson/tone-analyzer/v3');
 // for auth
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -63,6 +65,12 @@ router.post('/:userId/questions', (req, res) => {
       // Instantiates a client
       const client = new language.LanguageServiceClient();
 
+      // Instantiates an IBM Watson tone analyzer
+      const toneAnalyzer = new ToneAnalyzerV3({
+        // See: https://github.com/watson-developer-cloud/node-sdk#authentication
+        version: '2017-09-21',
+      });
+
       // format user's answer into a google langauge document
       const document = {
         content: text,
@@ -75,33 +83,48 @@ router.post('/:userId/questions', (req, res) => {
         client.analyzeEntitySentiment({document: document}),
       ]);
 
-      // load up an object with data from the APIs
-      let payload = {
-        analyzeSentiment,
-        analyzeEntitySentiment
-      }
+      // Array of 'utterances' to send to IBM watson 
+      let utterances = []
 
-      // make it pretty to explore on the console
-      print = beautify(payload, null, 2, 10);   
-      console.log(print) ;
+      // pull each sentence out of the analyzeSentiment response from Google
+      analyzeSentiment[0].sentences.forEach(sentence => {
+        let textContent = sentence.text.content;
+        // format utterances for IBM watson
+        utterances.push({ text: textContent, user: 'user' });
+      });
 
+      // Contact IBM watson
+      toneAnalyzer.toneChat({utterances: utterances})
+      .then(response => {
+          // load up an object with data from the APIs
+          let payload = {
+            analyzeSentiment,
+            analyzeEntitySentiment,
+            analyzeTone: response.result
+          }
 
-      // TODO format user feedback based on sentiment analysis
+          // TODO: Format anaylsis from APIs
 
-      // TODO mount analysis on question
+          // make it pretty to explore in console
+          print = beautify(payload, null, 2, 10);
+          console.log(print)
 
-      // push question to user's embedded question document
-      user.answeredQuestions.push(question);
-      // save user in database
-      user.save((error, user) => {
-        if (error) { 
-          // TODO send error status to client
-          res.json({ message: 'database error saving user', error })
-          return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
-        }
-        // respond to client with question
-        res.json(question)
-      })
+          // TODO mount analysis on question object
+          
+          // push question to user's embedded question document
+          user.answeredQuestions.push(question);
+          // save user in database
+          user.save((error, user) => {
+            if (error) { 
+              // TODO send error status to client
+              res.json({ message: 'database error saving user', error })
+              return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
+            }
+            // respond to client with question
+            res.json(question)
+          })
+        })
+        .catch(error => console.error(error));
     })(question.answer);
   })
 });
@@ -203,7 +226,6 @@ router.post('/auth/login', (req, res) => {
 
     if(!user){
       // if user is not found respond with status 400 bad request
-      // TODO stop sending email and password back
       return res.status(200).json({ message: 'No user found with that email!' });
     }
 
@@ -231,7 +253,7 @@ router.post('/auth/login', (req, res) => {
           return res.status(201).json({ success: true, token: 'Bearer ' + token })
         });
       } else {
-        // send status 400 if password is incorrect
+        // send status 200 if password is incorrect
         return res.status(200).json({ message: 'Password or email is incorrect' })
       }
     })
