@@ -53,18 +53,12 @@
 
 .feedback-form-box{
   width: 40vw;
-  opacity: 90%;
+  opacity: 50%;
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
   border: none;
 }
-
-/* .feedback-buttons-row{
-  padding-bottom: 0.5em;
-  display: flex;
-  justify-content: space-evenly;
-} */
-
+ 
 /* .feedback-instructions{
   border: 1px solid black;
   text-align: left;
@@ -81,10 +75,10 @@
   font-family: Arial, Helvetica, sans-serif;
 } */
 
-/* .feedbackBtn{
+.feedbackBtn{
   text-align: center;
-  border: 1px solid black;
-} */
+  /* margin-top: -5vw; */
+}
 
 .form-card{
   /* border: 1px solid black; */

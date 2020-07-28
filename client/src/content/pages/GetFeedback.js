@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: "50px",
         paddingTop: "25px"
     },
-    screencast: {
+    feedback: {
         textAlign: "right"
     }
 
@@ -37,17 +37,15 @@ const GetFeedback = (props) => {
                 <Grid item xs={12}></Grid>
                 <Grid item xs={12}>
                     <Box className={classes.banner}>
-                        <Container>
-                            <div className="feedback-instructions">
-                                <Typography className="caption" variant="h2">speak or type 
-                                </Typography>
-                                <p>Use the form below to get your thoughts on paper!
-                                </p>
-                            </div>          
-                        </Container>
-                            <div>
-                                <FeedbackForm />
-                            </div>
+                        <div className="feedback-instructions">
+                        <h1>feedback</h1>
+                        <Grid item xs={4}>
+                                <p>Sometimes getting the job you want just takes a little practice in the mirror. </p>
+                            </Grid>
+                        </div>
+                        <Grid item xs={12}>
+                        <FeedbackForm className={classes.feedback}/>
+                        </Grid>
                     </Box>
                 </Grid>
             </Grid>
