@@ -65,13 +65,6 @@
   text-align: left;
 } */
 
-/* .speech-results{
-  width: 40vw;
-  margin-left: 2vw; 
-  margin-bottom: 2vw;
-  border: 1px solid black;
-  border-radius: 5px;
-  height: 10em;
-  background-color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
-} */
+.feedbackBtn{
+  padding-bottom: 2vw;;
+}
