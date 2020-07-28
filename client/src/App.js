@@ -17,13 +17,13 @@ import CareerTips from './content/pages/CareerTips';
 
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-
-  const user = localStorage.getItem(`jwtToken`);
+  // get user via jwt token to confirm user authenticated
+  const user = localStorage.getItem('jwtToken')
+  
+  // setup a return based on user status
   return <Route {...rest} render={(props) => (
-      user
-          ? <Component {...rest} {...props} />
-          : <Redirect to='/login' />
-      )} 
+    user ? <Component {...rest} {...props} /> : <Redirect to='/login' />
+  )}
   />
 }
 

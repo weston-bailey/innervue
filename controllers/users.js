@@ -238,8 +238,8 @@ router.post('/auth/login', (req, res) => {
             res.status(500).json({ message: 'Internal jwt token error authorizing user! Please try again.', error });
             return toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
           }
-
-          return res.json({ success: true, token: 'Bearer ' + token })
+          // send status 201 if sign in successful
+          return res.status(201).json({ success: true, token: 'Bearer ' + token })
         });
       } else {
         // send status 400 if password is incorrect
