@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import jwt_decode from 'jwt-decode';
+import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -46,7 +48,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignupForm() {
+export default function SignupForm(props) {
+
+  console.log(props, "props")
 
   const classes = useStyles();
 
@@ -94,7 +98,18 @@ export default function SignupForm() {
 
         if(response.status === 201){
           // response.staus is 201 (created) then redirect
+          // response.staus if user is found and logged in
+          const { token } = response.data;
           console.log('true')
+          // Save to LocalStorage
+          localStorage.setItem('jwtToken', token);
+          // Set token to Auth Header
+          setAuthToken(token);
+          // Decode token to get user data
+          const decoded = jwt_decode(token);
+          // set current user (in App.js)
+          props.nowCurrentUser(decoded)
+          // Set current user
           setRedirect(true)
         } else {
             setStatusMessage(response.data.message);
@@ -105,7 +120,7 @@ export default function SignupForm() {
         .catch(err => console.log(err));
   }
   // redirect to feedback if user is successful in making a new account 
-  if (redirect) return <Redirect to="/login" />
+  if (redirect) return <Redirect to="/feedback" />
 
   return (
     <Container component="main" maxWidth="xs">

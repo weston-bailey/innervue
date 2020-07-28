@@ -300,7 +300,25 @@ router.post('/auth/register', (req, res) => {
               return toolbox.logError('users.js', 'POST /register', 'newUser()', error) 
             }
 
-            res.json({ message: 'Created New User!', user });
+            // once new user is saved create and send JSON Web Token
+            const payload = { 
+              id: user.id, 
+              firstName: user.firstName, 
+              lastName: user.lastName, 
+              fullName: user.getFullName(),
+              answeredQuestions: user.answeredQuestions 
+            }
+
+            // Sign token
+            jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
+              if (error) {
+                // send status 500 server error
+                res.status(500).json({ message: 'Internal jwt token error authorizing user! Please try again.', error });
+                return toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
+              }
+              // send status 201 if sign in successful
+              return res.status(201).json({ success: true, token: 'Bearer ' + token })
+            });
           })
 
         })

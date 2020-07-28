@@ -70,7 +70,8 @@ function App() {
         <PrivateRoute exact path='/feedback' component={GetFeedback} user={currentUser} />
         {/* <Route exact path='/feedback' component={GetFeedback} /> */}
         <Route exact path='/login' render={ (props) => <Login {...props} nowCurrentUser={nowCurrentUser} setIsAuthenticated={setIsAuthenticated} user={currentUser} /> } />
-        <Route exact path='/signup' component={SignupPage} />
+        <Route exact path='/signup' render={ (props) => <SignupPage {...props} nowCurrentUser={nowCurrentUser} setIsAuthenticated={setIsAuthenticated} user={currentUser} /> } />
+        {/* <Route exact path='/signup' component={SignupPage} /> */}
         <Route exact path='/tips' component={CareerTips} />
         <Footer />
       </ThemeProvider>
