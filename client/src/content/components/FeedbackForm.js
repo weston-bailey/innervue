@@ -29,7 +29,11 @@ const FeedbackForm = () => {
     const startListening = () => {
         SpeechRecognition.startListening({ continuous: true })
         setIsListening(true)
-        setInputs(transcript)
+        // setInputs({
+        //     answer: transcript,
+        //     content: '',
+        //     category: ''
+        // })
     }
 
     const stopListening = () => {
@@ -42,6 +46,11 @@ const FeedbackForm = () => {
     useEffect(() => {
         if (interimTranscript !== '') {
             // console.log('Got interim result:', interimTranscript)
+            setInputs({
+                answer: transcript,
+                content: null,
+                category: null
+            })
         }
         if (finalTranscript !== '') {
             // console.log('Got final result:', finalTranscript)
@@ -54,7 +63,6 @@ const FeedbackForm = () => {
 
     const handleSubmit = e => {
         e.preventDefault()
-        console.log(transcript)
         Axios.post(`http://localhost:3001/users/5f1f1cfa9b514a6ab4df5d66/questions`, inputs)
             .then(response => {
                 if (response.status === 200) {
@@ -106,7 +114,6 @@ const FeedbackForm = () => {
                         className="speech-results"
                         rowsMin={15}
                         value={transcript}
-                        onChange={(e) => {handleInputChange(e)} }
                         >Transcription:
                     </TextareaAutosize>
                 </div>
