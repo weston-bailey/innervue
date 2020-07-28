@@ -53,54 +53,18 @@
 
 .feedback-form-box{
   width: 40vw;
-  opacity: 90%;
+  opacity: 50%;
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
   border: none;
+  margin-top: -4vw;
 }
-
-/* .feedback-buttons-row{
-  padding-bottom: 0.5em;
-  display: flex;
-  justify-content: space-evenly;
-} */
-
+ 
 /* .feedback-instructions{
   border: 1px solid black;
   text-align: left;
 } */
 
-/* .speech-results{
-  width: 40vw;
-  margin-left: 2vw; 
-  margin-bottom: 2vw;
-  border: 1px solid black;
-  border-radius: 5px;
-  height: 10em;
-  background-color: #ffffff;
-  font-family: Arial, Helvetica, sans-serif;
-} */
-
-/* .feedbackBtn{
-  text-align: center;
-  border: 1px solid black;
-} */
-
-.form-card{
-  /* border: 1px solid black; */
-  background-image: url("https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60");
-  background-repeat: no-repeat;
-  background-size: cover;
-  text-align: center;
-  width: 44vw;
-  height: 44vw;
+.feedbackBtn{
+  padding-bottom: 2vw;;
 }
-
-/* .caption{
-  color: rgb(0, 0, 0);
-}
-
-.big-feedback{
-  padding: 4vw;
-  display: flex;
-} */

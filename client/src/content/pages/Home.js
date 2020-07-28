@@ -43,9 +43,9 @@ const Home = () => {
                                 <p>Sometimes getting the job you want just takes a little practice in the mirror. </p>
                             </Grid>
                             <Grid item xs={6} className={classes.screencast}>
-                                <Icon />
+                                  <Icon />
                                 
-                            </Grid>
+                              </Grid>
                             <Grid item xs={6} className={classes.screencast}>
                             <p textAlign="right">Insert screencast here</p>
                             </Grid>

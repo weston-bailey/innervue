@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box } from '@material-ui/core'
+import QuestionSelector from '../components/QuestionSelector'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: "50px",
         paddingTop: "25px"
     },
-    screencast: {
+    feedback: {
         textAlign: "right"
     }
 
@@ -32,26 +33,27 @@ const useStyles = makeStyles(theme => ({
 const GetFeedback = (props) => {
     const classes = useStyles()
     return (
-        <div>
             <Grid container spacing={6}>
                 <Grid item xs={12}></Grid>
                 <Grid item xs={12}>
                     <Box className={classes.banner}>
-                        <Container>
-                            <div className="feedback-instructions">
-                                <Typography className="caption" variant="h2">speak or type 
-                                </Typography>
-                                <p>Use the form below to get your thoughts on paper!
-                                </p>
-                            </div>          
-                        </Container>
-                            <div>
-                                <FeedbackForm />
-                            </div>
+                        <div className="feedback-instructions">
+                        <h1>feedback</h1>
+                        <Grid item xs={4}>
+                                <p>Talk or type in the text box and submit to get instant feedback on your response!</p>
+                            </Grid> 
+                        </div>
+                        <Grid container spacing={6}>
+                            <Grid item xs={6}>
+                            <FeedbackForm className={classes.feedback}/>
+                            </Grid>
+                            <Grid item xs={5}>
+                            <QuestionSelector/>
+                        </Grid>   
+                        </Grid>   
                     </Box>
                 </Grid>
             </Grid>
-        </div>
     );
 };
 

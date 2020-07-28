@@ -5,12 +5,13 @@ import Button from '@material-ui/core/Button'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import StopIcon from '@material-ui/icons/Stop';
-import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
+import Select from '@material-ui/core/Select';
 import Axios from 'axios';
+import SelectInput from '@material-ui/core/Select/SelectInput';
 
 
 const FeedbackForm = () => {
-
     const [isListening, setIsListening] = useState(false)
     const [createEntry, setCreateEntry] = useState(false)
     const [inputs, setInputs] = useState({
@@ -24,16 +25,11 @@ const FeedbackForm = () => {
         // e.persist();
         console.log(`Making a change to ${e.target.name}`)
         setInputs({...inputs, [e.target.name]: e.target.value})
-      }
+    }
     
     const startListening = () => {
         SpeechRecognition.startListening({ continuous: true })
         setIsListening(true)
-        // setInputs({
-        //     answer: transcript,
-        //     content: '',
-        //     category: ''
-        // })
     }
 
     const stopListening = () => {
@@ -79,11 +75,10 @@ const FeedbackForm = () => {
   }
 
     const displaySpeechForm = (
-        <Card className="form-card"
-        maxWidth="sm">
-            <div className="feedback-buttons-row">
+        <Grid container spacing={12}>
+            <Grid item xs={12} className="feedback-buttons-row">
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     color="secondary"
                     startIcon={<KeyboardVoiceIcon />}
                     onClick={startListening}
@@ -94,37 +89,38 @@ const FeedbackForm = () => {
                     stopListening()}
                 }
                 startIcon={<StopIcon/>}
-                variant="contained"
+                variant="outlined"
                 color="secondary"
                 >Stop</Button>
                 <Button onClick={resetTranscript}
-                variant="contained"
+                variant="outlined"
                 color="secondary"
                 >Reset</Button>
-            </div>
+            </Grid>
+            <Grid item xs={6}>
             <form className="feedbackBtn" onSubmit={
                 handleSubmit}>
                     <br />
-                <div>
                 <TextareaAutosize 
                     name="answer"
-                    className="speech-results"
-                    rowsMin={25}
+                    className="feedback-form-box"
+                    rowsMin={20}
                     value={transcript}
                     >Transcription:
                 </TextareaAutosize>
-                </div>
-                    <Button className="where" variant="contained" color="secondary" type="submit">Get Feedback</Button>
+                <Grid item xs={12}>
+                <Button className="where" variant="outlined" color="secondary" type="submit">Get Feedback</Button>
+                </Grid>
             </form>
-    </Card>
+            </Grid>
+        </Grid>        
     )
 
     const displayWriteForm = (
-        <Card className="form-card"
-            maxWidth="sm">
-            <div className="feedback-buttons-row">
+        <Grid container spacing={6}>
+            <Grid item xs={12} className="feedback-buttons-row">
                 <Button
-                    variant="contained"
+                    variant="outlined"
                     color="secondary"
                     startIcon={<KeyboardVoiceIcon />}
                     onClick={startListening}
@@ -135,32 +131,34 @@ const FeedbackForm = () => {
                     stopListening()}
                 }
                 startIcon={<StopIcon/>}
-                variant="contained"
+                variant="outlined"
                 color="secondary"
                 >Stop</Button>
                 <Button onClick={resetTranscript}
-                variant="contained"
+                variant="outlined"
                 color="secondary"
                 >Reset</Button>
-                </div>
-            <form onSubmit={handleSubmit}>    
-            
-            <br />
-                <TextareaAutosize 
-                    className="feedback-form-box"
-                    name="answer"
-                    onChange={handleInputChange}
-                    rowsMin={25}>
-                </TextareaAutosize>
-                <div className="feedbackBtn">
-                <Button variant="contained" color="secondary" onSubmit={handleSubmit} type="submit">Get Feedback</Button>
-                </div>
-            </form>
-        </Card>
+            </Grid>
+            <Grid item xs={6}>
+                <form onSubmit={handleSubmit}>    
+                <br />
+                    <TextareaAutosize 
+                        className="feedback-form-box"
+                        name="answer"
+                        onChange={handleInputChange}
+                        rowsMin={20}>
+                    </TextareaAutosize>
+                    <Grid item xs={12} className="feedbackBtn">
+                    <Button variant="outlined" color="secondary" onSubmit={handleSubmit} type="submit">Get Feedback</Button>
+                    </Grid>
+                </form>
+            </Grid>
+        </Grid>
     )
 
     // get one where we are talking into it, or one where we are supposed to write
     let correctForm = isListening ? displaySpeechForm :  displayWriteForm
+    
 
     return (
         <div className="show-correct-form">
