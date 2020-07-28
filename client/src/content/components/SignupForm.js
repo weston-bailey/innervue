@@ -107,9 +107,8 @@ export default function SignupForm(props) {
           // Set current user
           setRedirect(true)
         } else {
-          console.log('hit')
-            setStatusMessage(response.data.message);
-            setShowStatusMessage(true);
+          setStatusMessage(response.data.message);
+          setShowStatusMessage(true);
         }
 
       })

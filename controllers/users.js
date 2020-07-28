@@ -228,7 +228,7 @@ router.post('/auth/login', (req, res) => {
           firstName: user.firstName, 
           lastName: user.lastName, 
           fullName: user.getFullName(),
-          answeredQuestions: user.answeredQuestions 
+          // answeredQuestions: user.answeredQuestions 
         }
 
         // Sign token
@@ -306,7 +306,7 @@ router.post('/auth/register', (req, res) => {
               firstName: user.firstName, 
               lastName: user.lastName, 
               fullName: user.getFullName(),
-              answeredQuestions: user.answeredQuestions 
+              // answeredQuestions: user.answeredQuestions 
             }
 
             // Sign token
