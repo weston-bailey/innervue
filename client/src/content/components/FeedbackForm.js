@@ -12,7 +12,6 @@ import SelectInput from '@material-ui/core/Select/SelectInput';
 
 
 const FeedbackForm = () => {
-
     const [isListening, setIsListening] = useState(false)
     const [createEntry, setCreateEntry] = useState(false)
     const [inputs, setInputs] = useState({
@@ -76,56 +75,50 @@ const FeedbackForm = () => {
   }
 
     const displaySpeechForm = (
-        <Grid container spacing={12}> 
-            <Grid container spacing={12}>
-                <Grid item xs={12} className="feedback-buttons-row">
-                    <Button
-                        variant="outlined"
-                        color="secondary"
-                        startIcon={<KeyboardVoiceIcon />}
-                        onClick={startListening}
-                    >
-                    Start
-                    </Button>
-                    <Button onClick={() => {
-                        stopListening()}
-                    }
-                    startIcon={<StopIcon/>}
+        <Grid container spacing={12}>
+            <Grid item xs={12} className="feedback-buttons-row">
+                <Button
                     variant="outlined"
                     color="secondary"
-                    >Stop</Button>
-                    <Button onClick={resetTranscript}
-                    variant="outlined"
-                    color="secondary"
-                    >Reset</Button>
-                </Grid>
-            </Grid>        
-            <Grid container spacing={3}>
-                <Select />
-                
-                <Grid item xs={6}>
-                <form className="feedbackBtn" onSubmit={
-                    handleSubmit}>
-                        <br />
-                    <TextareaAutosize 
-                        name="answer"
-                        className="feedback-form-box"
-                        rowsMin={25}
-                        value={transcript}
-                        >Transcription:
-                    </TextareaAutosize>
-                    <Grid item xs={3}>
-                    <Button className="where" variant="outlined" color="secondary" type="submit">Get Feedback</Button>
-                    </Grid>
-                </form>
-                </Grid>
+                    startIcon={<KeyboardVoiceIcon />}
+                    onClick={startListening}
+                >
+                Start
+                </Button>
+                <Button onClick={() => {
+                    stopListening()}
+                }
+                startIcon={<StopIcon/>}
+                variant="outlined"
+                color="secondary"
+                >Stop</Button>
+                <Button onClick={resetTranscript}
+                variant="outlined"
+                color="secondary"
+                >Reset</Button>
             </Grid>
-        </Grid>  
+            <Grid item xs={6}>
+            <form className="feedbackBtn" onSubmit={
+                handleSubmit}>
+                    <br />
+                <TextareaAutosize 
+                    name="answer"
+                    className="feedback-form-box"
+                    rowsMin={20}
+                    value={transcript}
+                    >Transcription:
+                </TextareaAutosize>
+                <Grid item xs={12}>
+                <Button className="where" variant="outlined" color="secondary" type="submit">Get Feedback</Button>
+                </Grid>
+            </form>
+            </Grid>
+        </Grid>        
     )
 
     const displayWriteForm = (
-        <Grid container spacing={3}>
-            <Grid item xs={3} className="feedback-buttons-row">
+        <Grid container spacing={6}>
+            <Grid item xs={12} className="feedback-buttons-row">
                 <Button
                     variant="outlined"
                     color="secondary"
@@ -153,9 +146,9 @@ const FeedbackForm = () => {
                         className="feedback-form-box"
                         name="answer"
                         onChange={handleInputChange}
-                        rowsMin={25}>
+                        rowsMin={20}>
                     </TextareaAutosize>
-                    <Grid item xs={3} className="feedbackBtn">
+                    <Grid item xs={12} className="feedbackBtn">
                     <Button variant="outlined" color="secondary" onSubmit={handleSubmit} type="submit">Get Feedback</Button>
                     </Grid>
                 </form>
@@ -165,6 +158,7 @@ const FeedbackForm = () => {
 
     // get one where we are talking into it, or one where we are supposed to write
     let correctForm = isListening ? displaySpeechForm :  displayWriteForm
+    
 
     return (
         <div className="show-correct-form">

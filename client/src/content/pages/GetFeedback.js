@@ -32,7 +32,6 @@ const useStyles = makeStyles(theme => ({
 const GetFeedback = (props) => {
     const classes = useStyles()
     return (
-        <div>
             <Grid container spacing={6}>
                 <Grid item xs={12}></Grid>
                 <Grid item xs={12}>
@@ -40,16 +39,17 @@ const GetFeedback = (props) => {
                         <div className="feedback-instructions">
                         <h1>feedback</h1>
                         <Grid item xs={4}>
-                                <p>Sometimes getting the job you want just takes a little practice in the mirror. </p>
-                            </Grid>
+                                <p>Talk or type in the text box and submit to get instant feedback on your response!</p>
+                            </Grid> 
                         </div>
-                        <Grid item xs={12}>
-                        <FeedbackForm className={classes.feedback}/>
+                        <Grid container spacing={12}>
+                            <Grid item xs={4}>
+                            <FeedbackForm className={classes.feedback}/>
+                            </Grid>
                         </Grid>
                     </Box>
                 </Grid>
             </Grid>
-        </div>
     );
 };
 
