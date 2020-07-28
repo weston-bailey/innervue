@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
-    flexGrow: 1,
+    flexGrow: 1
   },
 }));
 
@@ -28,10 +28,10 @@ export default function ButtonAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" className={classes.menuButton} color="secondary" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Typography variant="h2" className={classes.title}>
+          <Typography variant="h3" className={classes.title}>
             <Link className="nav-link" to="/">innervue</Link>
           </Typography>
           <Button color="inherit">
