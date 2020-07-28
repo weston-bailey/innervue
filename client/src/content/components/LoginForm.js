@@ -48,7 +48,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+export default function LoginForm(props) {
+  console.log('login form')
+  console.log(props)
   const classes = useStyles();
   // register form state for user input fields
   const [email, setEmail] = useState('');
@@ -62,7 +64,6 @@ export default function SignIn() {
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
-    console.log(email)
   }
 
   const handlePassword = (e) => {
@@ -78,8 +79,6 @@ export default function SignIn() {
     console.log('hit')
     axios.post('http://localhost:3001/users/auth/login', credentials)
     .then(response => {
-      console.log(response);
-
       if(response.status === 201){
         // response.staus if user is found and logged in
         console.log('true')

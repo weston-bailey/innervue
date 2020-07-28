@@ -21,8 +21,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar(props) {
+  console.log('appbar', props)
   const classes = useStyles();
+
+  const isAuthed = (
+    <div>
+      <Button color="inherit">
+        <Link className="nav-link" to="/myresponses">My Responses</Link>
+      </Button>
+      <Button color="inherit">
+        <Link className="nav-link" to="/feedback">Get Feedback</Link>
+      </Button>
+      <Button color="inherit">
+        <Link className="nav-link" to="/login" onClick={props.handleLogout}>Logout</Link>          
+      </Button>
+    </div>
+  )
+
+  const notAuthed = (
+    <div>
+      <Button color="inherit">
+        <Link className="nav-link" to="/login">Login</Link>          
+      </Button>
+      <Button color="inherit">
+        <Link className="nav-link" to="/signup">Signup</Link>          
+      </Button>
+    </div>
+  )
 
   return (
     <div className={classes.root}>
@@ -34,21 +60,7 @@ export default function ButtonAppBar() {
           <Typography variant="h3" className={classes.title}>
             <Link className="nav-link" to="/">innervue</Link>
           </Typography>
-          <Button color="inherit">
-          <Link className="nav-link" to="/myresponses">My Responses</Link>
-          </Button>
-          <Button color="inherit">
-          <Link className="nav-link" to="/feedback">Get Feedback</Link>
-          </Button>
-          <Button color="inherit">
-          <Link className="nav-link" to="/login">Login</Link>          
-          </Button>
-          <Button color="inherit">
-          <Link className="nav-link" to="/signup">Signup</Link>          
-          </Button>
-          <Button color="inherit">
-          <Link className="nav-link" to="/tips">Career Advice</Link>          
-          </Button>
+          { props.isAuthenticated ? isAuthed : notAuthed }
         </Toolbar>
       </AppBar>
     </div>

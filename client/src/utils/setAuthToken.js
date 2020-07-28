@@ -12,7 +12,7 @@ const setAuthToken = token => {
   }
 }
 
-export default setAuthToken
+export default setAuthToken;
   // if token
     // send token as header to backen
   // else

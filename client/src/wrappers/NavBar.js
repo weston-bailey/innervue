@@ -2,10 +2,10 @@ import React from 'react';
 import AppBar from '../content/components/AppBar'
 
 
-const NavBar = () => {
+const NavBar = (props) => {
     return (
         <div>
-        <AppBar />
+        <AppBar {...props} />
         </div>
     )
 }
