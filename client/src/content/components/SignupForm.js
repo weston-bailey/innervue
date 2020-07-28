@@ -1,4 +1,3 @@
-  
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Redirect } from 'react-router-dom';
@@ -48,6 +47,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SignupForm() {
+
+  const classes = useStyles();
+
   // register form state for user input fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -59,8 +61,6 @@ export default function SignupForm() {
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   // the message form the server
   const [statusMessage, setStatusMessage] = useState(false);
-
-  const classes = useStyles();
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -105,7 +105,7 @@ export default function SignupForm() {
         .catch(err => console.log(err));
   }
   // redirect to feedback if user is successful in making a new account 
-  if (redirect) return <Redirect to="/feedback" />
+  if (redirect) return <Redirect to="/login" />
 
   return (
     <Container component="main" maxWidth="xs">
