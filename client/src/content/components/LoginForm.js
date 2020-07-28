@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Redirect } from 'react-router-dom';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -48,6 +50,51 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
   const classes = useStyles();
+  // register form state for user input fields
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  // redirect state if new user is made
+  const [redirect, setRedirect] = useState(false);
+  // if a status message should be shown from the server
+  const [showStatusMessage, setShowStatusMessage] = useState(false);
+  // the message form the server
+  const [statusMessage, setStatusMessage] = useState(false);
+
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+    console.log(email)
+  }
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const credentials = {
+      email: email,
+      password: password,
+    }
+    console.log('hit')
+    axios.post('http://localhost:3001/users/auth/login', credentials)
+    .then(response => {
+      console.log(response);
+
+      if(response.status === 201){
+        // response.staus if user is found and logged in
+        console.log('true')
+        setRedirect(true)
+      } else {
+          setStatusMessage(response.data.message);
+          setShowStatusMessage(true);
+      }
+
+    })
+      .catch(err => console.log(err));
+  }
+
+    // redirect 
+    if (redirect) return <Redirect to="/feedback" />
 
   return (
     <Container component="main" maxWidth="xs">
@@ -59,7 +106,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={ handleSubmit }>
           <TextField
             variant="outlined"
             margin="normal"
@@ -70,6 +117,7 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={ handleEmail }
           />
           <TextField
             variant="outlined"
@@ -81,6 +129,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={ handlePassword }
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
