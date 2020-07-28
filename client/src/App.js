@@ -4,7 +4,6 @@ import {BrowserRouter as Router, Route, Link, Redirect} from "react-router-dom";
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken';
 import NavBar from './wrappers/NavBar'
-import Header from './wrappers/Header';
 import Footer from './wrappers/Footer';
 import Home from './content/pages/Home';
 import GetFeedback from './content/pages/GetFeedback';
@@ -66,7 +65,6 @@ function App() {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} />
-        <Header />
         <Route exact path="/" component={Home} />
         <PrivateRoute exact path='/myresponse' component={MyResponses} user={currentUser} />
         {/* <Route exact path='/myresponses' component={MyResponses} /> */}
