@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import jwt_decode from 'jwt-decode';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import Button from '@material-ui/core/Button'
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
@@ -61,19 +62,21 @@ const FeedbackForm = () => {
     }
 
     const handleSubmit = e => {
-        e.preventDefault()
-        Axios.post(`http://localhost:3001/users/5f1f1cfa9b514a6ab4df5d66/questions`, inputs)
-            .then(response => {
-                if (response.status === 200) {
-                    console.log(response.data.answeredQuestions)
-                    console.log("🌴")
-                    setCreateEntry(true)
-                } else {
-                    console.log(response.statusText)
-                }
-            })
-            .catch(err => console.log(err))
-    }
+      e.preventDefault();
+      // get the current user from the jwt token
+      const decoded = jwt_decode(localStorage.getItem('jwtToken'));
+      Axios.post(`http://localhost:3001/users/${decoded.id}/questions`, inputs)
+          .then(response => {
+              if (response.status === 200) {
+                  console.log(response.data.answeredQuestions)
+                  console.log("🌴")
+                  setCreateEntry(true)
+              } else {
+                  console.log(response.statusText)
+              }
+          })
+          .catch(err => console.log(err))
+  }
 
     const displaySpeechForm = (
         <Card className="form-card"
