@@ -31,6 +31,7 @@ function App() {
   // current user state
   let [currentUser, setCurrentUser] = useState('');
   let [isAuthenticated, setIsAuthenticated] = useState(false);
+  let [analysis, setAnalysis] = useState(false);
   useEffect( () => {
     let token;
     if(localStorage.getItem('jwtToken') === null ) {
@@ -64,10 +65,10 @@ function App() {
     <div>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} />
+        <NavBar handleLogout={handleLogout} isAuthenticated={isAuthenticated} setAnalysis={setAnalysis}/>
         <Route exact path="/" component={Home} />
         <PrivateRoute exact path='/myresponses' component={MyResponses} user={currentUser} />
-        <PrivateRoute exact path='/feedback' component={GetFeedback} user={currentUser} />
+        <PrivateRoute exact path='/feedback' component={GetFeedback} user={currentUser} analysis={analysis} setAnalysis={setAnalysis}/>
         {/* <Route exact path='/feedback' component={GetFeedback} /> */}
         <Route exact path='/login' render={ (props) => <Login {...props} nowCurrentUser={nowCurrentUser} setIsAuthenticated={setIsAuthenticated} user={currentUser} /> } />
         <Route exact path='/signup' render={ (props) => <SignupPage {...props} nowCurrentUser={nowCurrentUser} setIsAuthenticated={setIsAuthenticated} user={currentUser} /> } />
