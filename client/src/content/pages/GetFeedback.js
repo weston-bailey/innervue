@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import FeedbackForm from '../components/FeedbackForm';
-import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
-import { Box } from '@material-ui/core'
-import QuestionSelector from '../components/QuestionSelector'
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import { Box, Container } from '@material-ui/core';
+import QuestionSelector from '../components/QuestionSelector';
 import { set } from 'd3';
-import questions from '../Questions';
+import FeedbackLogo from '../components/FeedbackLogo';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -98,14 +98,30 @@ const GetFeedback = (props) => {
 
     const gettingAnalysis = (
         <div>
-          <p>Question category: {question.category}</p>
-          <p>The question you selected: {question.content}</p>
-          <p>Your response: {question.answer}</p>
-          <p>Your overall sentiment score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
-          <p>Our feedback: {question.analysis.overallFeedback}</p>
-          <p>{negativity}</p>
+            <Grid container spacing={6}>
+                <Grid item xs={12}></Grid>
+                <Grid item xs={12}>
+                    <Box>
+                        <Box className={classes.banner}>
+                            <h1>analysis</h1>
+                       
+                        <div>
+                            <p>Question category: {question.category}</p>
+                            <p>The question you selected: {question.content}</p>
+                            <p>Your response: {question.answer}</p>
+                            <p>Your overall sentiment score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+                            <p>Our feedback: {question.analysis.overallFeedback}</p>
+                            <p>{negativity}</p>
+                        </div>
+                        <FeedbackLogo />
+                        </Box>
+                    </Box>
+                </Grid>
+            </Grid>
         </div>
     )
+
+        
 
     return (
             <div>

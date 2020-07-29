@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import Button from '@material-ui/core/Button';
 
 const MyResponses = (props) => {
   // if a status message should be shown from the server
@@ -60,6 +61,7 @@ const MyResponses = (props) => {
           <p>over all score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
           <p>feedback: {question.analysis.overallFeedback}</p>
           <p>{question.analysis.negativeMentions}</p>
+          <Button variant="contained" color="secondary">Delete This Response</Button>
         </div>
       )
     })
