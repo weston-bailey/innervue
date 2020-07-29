@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import FeedbackForm from '../components/FeedbackForm';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box } from '@material-ui/core'
 import QuestionSelector from '../components/QuestionSelector'
@@ -53,8 +50,8 @@ const GetFeedback = (props) => {
     const classes = useStyles()
     return (
             <Grid container spacing={6}>
-                <Grid item xs={10}></Grid>
-                <Grid item xs={10}>
+                <Grid item xs={12}></Grid>
+                <Grid item xs={12}>
                     <Box className={classes.banner}>
                         <div className="feedback-instructions">
                         <h1>feedback</h1>
@@ -73,7 +70,7 @@ const GetFeedback = (props) => {
                             <Grid item xs={5}>
                             <QuestionSelector handleQuestionClick={handleQuestionClick}/>
                         </Grid>   
-                        </Grid>   
+                        </Grid>
                     </Box>
                 </Grid>
             </Grid>

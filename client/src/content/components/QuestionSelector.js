@@ -40,6 +40,132 @@ export default function QuestionSelector(props) {
           ))} 
         </Select>
       </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-native-simple">Communication Skills</InputLabel>
+        <Select
+          native
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
+        >
+          <option aria-label="None" value="" />
+          {questions[1].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-native-simple">Conflict Resolution</InputLabel>
+        <Select
+          native
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
+        >
+          <option aria-label="None" value="" />
+          {questions[2].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-native-simple">Diversity and Inclusion</InputLabel>
+        <Select
+          native
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
+        >
+          <option aria-label="None" value="" />
+          {questions[3].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-native-simple">Adaptability</InputLabel>
+        <Select
+          native
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
+        >
+          <option aria-label="None" value="" />
+          {questions[4].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-native-simple">Time Management</InputLabel>
+        <Select
+          native
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
+        >
+          <option aria-label="None" value="" />
+          {questions[5].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-native-simple">Teamwork</InputLabel>
+        <Select
+          native
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
+        >
+          <option aria-label="None" value="" />
+          {questions[6].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
+        </Select>
+      </FormControl>
+      <FormControl className={classes.formControl}>
+        <InputLabel htmlFor="age-native-simple">Motivation</InputLabel>
+        <Select
+          native
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
+        >
+          <option aria-label="None" value="" />
+          {questions[7].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
+        </Select>
+      </FormControl>
     </div>
   );
 }
