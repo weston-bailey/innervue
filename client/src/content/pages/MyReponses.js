@@ -21,13 +21,7 @@ const MyResponses = (props) => {
     axios.get(`http://localhost:3001/users/${decoded.id}/questions`)
     .then(response => {
         if (response.status === 201) {
-          // console log of object containing user's answered questions from the database
-          console.log(response.data)
-          // TODO convert response.data object to array 
-          
-          // TODO set questions to array of questions 
-          
-          // setQuestions()
+          setQuestions(response.data)
         } else {
           // set state for server status message and rerender
           setStatusMessage(response.data.message);
@@ -36,11 +30,47 @@ const MyResponses = (props) => {
     })
     .catch(err => console.log(err))
   }
+  
+  // loading message (waiting on server response)   
+  let loading = (
+    <div>
+      <p>loading....</p>
+    </div>
+  )
+  // responses to render   
+  let responses;
+  
+  // only map questions if it is not null   
+  if(questions){
+
+     responses = questions.map(question => {
+        question.analysis.negativeMentions.map(negativeMention => {
+          return(
+            <div>
+              <p>{negativeMention} was mentioned negatively mentioned </p>
+            </div>
+          )
+        })
+
+      return (
+        <div>
+          <p>category: {question.category}</p>
+          <p>question: {question.content}</p>
+          <p>response: {question.answer}</p>
+          <p>over all score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+          <p>feedback: {question.analysis.overallFeedback}</p>
+          <p>{question.analysis.negativeMentions}</p>
+        </div>
+      )
+    })
+
+  }
 
   return (
       <div>
           <p>{ statusMessage }</p>
           my responses
+          { responses ? responses : loading }
       </div>
   );
 };
