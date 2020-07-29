@@ -30,15 +30,17 @@ const MyResponses = (props) => {
     })
     .catch(err => console.log(err))
   }
-
-  let responses;
-
+  
+  // loading message (waiting on server response)   
   let loading = (
     <div>
       <p>loading....</p>
     </div>
   )
-
+  // responses to render   
+  let responses;
+  
+  // only map questions if it is not null   
   if(questions){
 
      responses = questions.map(question => {
