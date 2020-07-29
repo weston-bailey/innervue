@@ -69,7 +69,7 @@ const GetFeedback = (props) => {
                             </Grid>
                             <Grid item xs={5}>
                             <QuestionSelector handleQuestionClick={handleQuestionClick}/>
-                        </Grid>   
+                        </Grid>  
                         </Grid>
                     </Box>
                 </Grid>

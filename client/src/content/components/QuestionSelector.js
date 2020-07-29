@@ -21,7 +21,7 @@ export default function QuestionSelector(props) {
   const classes = useStyles();
 
   return (
-    <div>
+    <div className="questions">
       <FormControl className={classes.formControl}>
         <InputLabel htmlFor="age-native-simple">Getting to Know You</InputLabel>
         <Select
