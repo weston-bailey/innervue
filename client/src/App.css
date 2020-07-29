@@ -57,7 +57,7 @@
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
   border: none;
-  margin-top: -4vw;
+  margin-top: -2vw;
 }
  
 /* .feedback-instructions{
@@ -67,4 +67,9 @@
 
 .feedbackBtn{
   padding-bottom: 2vw;;
+}
+
+.questions{
+  margin-bottom: 5vw;
+  margin-top: -6vw;
 }

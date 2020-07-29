@@ -1,12 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FeedbackForm from '../components/FeedbackForm';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid'
-import Paper from '@material-ui/core/Paper'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box } from '@material-ui/core'
 import QuestionSelector from '../components/QuestionSelector'
+import { set } from 'd3';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -30,30 +28,65 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
+// state logic
+// category:
+// content:
+
+// handle question click events to set state
+// prevent default of click
+// set selected question state
+
+
 const GetFeedback = (props) => {
+        // pass down as properties to QuestionSelector
+    const [selectedQuestion, setSelectedQuestion] = useState("")
+    const [selectedCategory, setSelectedCategory] = useState("")
+    const [analysis, setAnalysis] = useState(false)
+ 
+    const handleQuestionClick = (event) => {
+        setSelectedQuestion(event.target.value)
+        setSelectedCategory(event.target.name)
+        // console.log(selectedQuestion)
+    };
+
     const classes = useStyles()
-    return (
+
+    const gettingFeedback = (
+        <Grid container spacing={6}>
+            <Grid item xs={12}></Grid>
+            <Grid item xs={12}>
+             <Box className={classes.banner}>
+                <div className="feedback-instructions">
+                <h1>feedback</h1>
+                <Grid item xs={4}>
+                <p>Talk or type in the text box and submit to get instant feedback on your response!</p>
+                </Grid> 
+                </div>
             <Grid container spacing={6}>
-                <Grid item xs={12}></Grid>
-                <Grid item xs={12}>
-                    <Box className={classes.banner}>
-                        <div className="feedback-instructions">
-                        <h1>feedback</h1>
-                        <Grid item xs={4}>
-                                <p>Talk or type in the text box and submit to get instant feedback on your response!</p>
-                            </Grid> 
-                        </div>
-                        <Grid container spacing={6}>
-                            <Grid item xs={6}>
-                            <FeedbackForm className={classes.feedback}/>
-                            </Grid>
-                            <Grid item xs={5}>
-                            <QuestionSelector/>
-                        </Grid>   
-                        </Grid>   
-                    </Box>
+                <Grid item xs={6}>
+                    <FeedbackForm 
+                    className={classes.feedback}
+                    selectedQuestion={selectedQuestion}
+                    selectedCategory={selectedCategory}
+                    setAnalysis={setAnalysis}
+                    />
                 </Grid>
+                <Grid item xs={5}>
+                <QuestionSelector handleQuestionClick={handleQuestionClick}/>
+            </Grid>  
             </Grid>
+            </Box>
+        </Grid>
+    </Grid>)
+
+    const gettingAnalysis = (
+        <div>hello</div>
+    )
+
+    return (
+            <div>
+                {analysis ? gettingAnalysis : gettingFeedback}
+            </div>
     );
 };
 
