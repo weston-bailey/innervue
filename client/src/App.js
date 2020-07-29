@@ -57,8 +57,8 @@ function App() {
     }
   }
 
-  console.log('current user is:', currentUser)
-  console.log('is user authenticated:', isAuthenticated)
+  // console.log('current user is:', currentUser)
+  // console.log('is user authenticated:', isAuthenticated)
 
   return (
     <div>

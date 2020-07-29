@@ -7,7 +7,7 @@ import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import StopIcon from '@material-ui/icons/Stop';
 import Grid from '@material-ui/core/Grid';
 import Select from '@material-ui/core/Select';
-import Axios from 'axios';
+import axios from 'axios';
 import SelectInput from '@material-ui/core/Select/SelectInput';
 
 
@@ -18,7 +18,6 @@ const FeedbackForm = (props) => {
       content: '',
       category: ''
     });
-
     // if a status message should be shown from the server
     const [showStatusMessage, setShowStatusMessage] = useState(false);
     // the message form the server
@@ -69,19 +68,19 @@ const FeedbackForm = (props) => {
       inputs.category = props.selectedCategory;
       // get the current user from the jwt token
       const decoded = jwt_decode(localStorage.getItem('jwtToken'));
-      Axios.post(`http://localhost:3001/users/${decoded.id}/questions`, inputs)
-          .then(response => {
-              if (response.status === 201) {
-                  props.setAnalysis(true)
-                  console.log(response.data)
-              } else {
-                // set state for server status message and rerender
-                setStatusMessage(response.data.message);
-                setShowStatusMessage(true);
-              }
-          })
-          .catch(err => console.log(err))
-  }
+      axios.post(`http://localhost:3001/users/${decoded.id}/questions`, inputs)
+      .then(response => {
+          if (response.status === 201) {
+              props.setQuestion(response.data)
+              props.setAnalysis(true)
+          } else {
+            // set state for server status message and re render
+            setStatusMessage(response.data.message);
+            setShowStatusMessage(true);
+          }
+      })
+      .catch(err => console.log(err))
+    }
 
     const displaySpeechForm = (
         <Grid container spacing={12}>
@@ -168,7 +167,7 @@ const FeedbackForm = (props) => {
     )
 
     // get one where we are talking into it, or one where we are supposed to write
-    let correctForm = isListening ? displaySpeechForm :  displayWriteForm
+    let correctForm = isListening ? displaySpeechForm : displayWriteForm
     
 
     return (

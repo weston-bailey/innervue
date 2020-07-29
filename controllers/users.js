@@ -25,18 +25,16 @@ router.get('/:userId/questions', (req, res) => {
   
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
-      // TODO send error status to client
-      res.json({ message: 'database error finding user', error })
+      // send status 500 and a message user not found
+      res.status(500).json({ message: 'database error finding user', error })
       return toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
     }
     if(!user){
-      // user not found in database
-      // TODO send error status to client
-      return res.json({ message: 'User id not found' })
+      // send status 200 and user not found message
+      return res.status(200).json({ message: 'User id not found' })
     }
     // send user's answred questions to client
-    res.json(user.answeredQuestions);
-
+    res.status(201).json(user.answeredQuestions);
   })
 });
 
@@ -159,9 +157,10 @@ router.post('/:userId/questions', (req, res) => {
 
           //mount analysis on question object
           question.analysis = analysis;
-          console.log(question)
+
           // push question to user's embedded question document
           user.answeredQuestions.push(question);
+          
           // save user in database
           user.save((error, user) => {
             if (error) { 
