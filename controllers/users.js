@@ -114,7 +114,7 @@ router.post('/:userId/questions', (req, res) => {
 
           // format analysis based on sentiment 
           let analysis = {}
-          analysis.negetiveMentions = []
+          analysis.negativeMentions = []
 
           // return if the answer was too short
           if(payload.analyzeTone.utterances_tone.length < 4) return res.json({ message: 'Responses must be at least four sentances in length!'});
@@ -122,7 +122,7 @@ router.post('/:userId/questions', (req, res) => {
           // search for any entities that have negetive sentiment associated with them
           payload.analyzeEntitySentiment[0].entities.forEach(mention => {
             if(mention.sentiment.score < -.5){
-              analysis.negetiveMentions.push(mention.name);
+              analysis.negativeMentions.push(mention.name);
             }
           });
 

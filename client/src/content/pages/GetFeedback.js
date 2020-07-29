@@ -49,7 +49,7 @@ const GetFeedback = (props) => {
       content: '',
       answer: '',
       analysis: {
-        negetiveMentions: [],
+        negativeMentions: [],
         overallScore: '',
         overallMagnitude: '',
         overallFeedback: ''
@@ -95,23 +95,24 @@ const GetFeedback = (props) => {
     )
     console.log('question:', question);
 
-    // map the negetive mentions into something pretty -- this array can be empty sometimes (nothing was mentioned negetively)
-    question.analysis.negetiveMentions.map( negativeMention => {
-      return(
-        <div>
-          {negativeMention} was mentioned negetively mentioned 
-        </div>
-      )
-    })
+    // map the negative mentions into something pretty -- this array can be empty sometimes (nothing was mentioned negetively)
+    const negativity = ( question.analysis.negativeMentions.map( negativeMention => {
+        return(
+            <div>
+            {negativeMention} was mentioned negatively. Consider reframing your experience with {negativeMention}. 
+            </div>
+        )
+        })
+    )
 
     const gettingAnalysis = (
         <div>
-          <p>category: {question.category}</p>
-          <p>question: {question.content}</p>
-          <p>response: {question.answer}</p>
-          <p>over all score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
-          <p>feedback: {question.analysis.overallFeedback}</p>
-          <p>{question.analysis.negetiveMentions}</p>
+          <p>Question category: {question.category}</p>
+          <p>The question you selected: {question.content}</p>
+          <p>Your response: {question.answer}</p>
+          <p>Your overall sentiment score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+          <p>Our feedback: {question.analysis.overallFeedback}</p>
+          <p>{negativity}</p>
         </div>
     )
 

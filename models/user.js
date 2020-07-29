@@ -6,7 +6,7 @@ const answeredQuestionSchema = new mongoose.Schema({
   content: String,
   answer: String,
   analysis: {
-    negetiveMentions: Array,
+    negativeMentions: Array,
     overallScore: String,
     overallMagnitude: String,
     overallFeedback: String
