@@ -48,7 +48,7 @@ const FeedbackForm = (props) => {
                 content: props.selectedQuestion,
                 category: props.selectedCategory
             })
-            console.log(inputs)
+            // console.log(inputs)
         }
         if (finalTranscript !== '') {
             // console.log('Got final result:', finalTranscript)
@@ -68,7 +68,7 @@ const FeedbackForm = (props) => {
               console.log(response.status)
               if (response.status === 200) {
                   console.log(props.setAnalysis)
-                  props.setAnalysis(false)
+                  props.setAnalysis(true)
                   console.log("🌴")
                   setCreateEntry(true)
               } else {
