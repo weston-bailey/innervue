@@ -5,10 +5,11 @@ const answeredQuestionSchema = new mongoose.Schema({
   category: String,
   content: String,
   answer: String,
-  // TODO update analysis 
   analysis: {
-    key1: String,
-    key2: String
+    negetiveMentions: Array,
+    overallScore: String,
+    overallMagnitude: String,
+    overallFeedback: String
   }
 }, {
   timestamps: true

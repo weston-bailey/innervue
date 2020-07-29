@@ -48,6 +48,10 @@ router.post('/:userId/questions', (req, res) => {
   // question, user's answer and category
   let question = req.body
 
+  // we don't want blank values in the question, return immediately if they are found
+  if(!question.answer) return res.json({ message: 'Response is empty! Please submit a valid response!'});
+  if(!question.content || !question.category ) return res.json({ message: 'No question selected, please select a question and resubmit!'});
+  
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
       // TODO send error status to client
@@ -56,10 +60,13 @@ router.post('/:userId/questions', (req, res) => {
     }
     if(!user){
       // user not found in database
-      // TODO send error status to client
       return res.json({ message: 'User id not found'  })
     }
 
+    // console.log(question)
+    // res.status(201).json(question)
+
+    // return
     // perfrom call APIs, perform analysis on user's answer, 
     (async text => {
       // Instantiates a client
@@ -103,14 +110,56 @@ router.post('/:userId/questions', (req, res) => {
             analyzeTone: response.result
           }
 
-          // TODO: Format anaylsis from APIs
+          // uncomment these lines to explore that beautiful blob of data in the console
+          // print = beautify(payload.analyzeSentiment, null, 2, 10);
+          // console.log(print)
 
-          // make it pretty to explore in console
-          print = beautify(payload, null, 2, 10);
-          console.log(print)
+          // format analysis based on sentiment 
+          let analysis = {}
+          analysis.negetiveMentions = []
 
-          // TODO mount analysis on question object
-          
+          // return if the answer was too short
+          if(payload.analyzeTone.utterances_tone.length < 4) return res.json({ message: 'Responses must be at least four sentances in length!'});
+
+          // search for any entities that have negetive sentiment associated with them
+          payload.analyzeEntitySentiment[0].entities.forEach(mention => {
+            if(mention.sentiment.score < -.5){
+              analysis.negetiveMentions.push(mention.name);
+            }
+          });
+
+          //Overall sentiment of users's answer
+          let score = payload.analyzeSentiment[0].documentSentiment.score;
+          console.log(score)
+          analysis.overallScore = (score < 0 ? "negative" :
+                                   score < .5 ? "neutral" :
+                                   "positve");
+
+          let magnitude = payload.analyzeSentiment[0].documentSentiment.magnitude;
+          console.log(magnitude)
+          analysis.overallMagnitude = (magnitude < 1 ? "somewhat" :
+                                       magnitude < 2 ? "moderately" :
+                                       magnitude < 3 ? "clearly" :
+                                       "extremely"); 
+
+          // provide some feedback based on overall sentiment score
+          switch(analysis.overallScore){
+            case "negative" :
+              analysis.overallFeedback = "Your response reflects a negative sentiment. We suggest modifying your response to communicate more effectively.";
+              break;
+            case "neutral" :
+              analysis.overallFeedback = "Your response is looking good, try modifying it some more to make it more impactful.";
+              break;
+              case "positve" :
+                analysis.overallFeedback = "You response reflects a clearly positive sentiment. This will appeal to interviewers!";
+              break;
+            default :
+              analysis.overallFeedback = "Oh no! something went wrong! 😕"
+          }
+
+          //mount analysis on question object
+          question.analysis = analysis;
+          console.log(question)
           // push question to user's embedded question document
           user.answeredQuestions.push(question);
           // save user in database
@@ -121,7 +170,7 @@ router.post('/:userId/questions', (req, res) => {
               return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
             }
             // respond to client with question
-            res.json(question)
+            res.status(201).json(question)
           })
         })
         .catch(error => console.error(error));

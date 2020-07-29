@@ -90,7 +90,7 @@ async function googleCloud(text) {
         if (responseLength < 4) {
             return "We suggest you provide a longer response to fully answer the interview question and so we can provide adequate feedback."
         } else {
-            return "Here's the summary analysis of your response:"
+            // return "Here's the summary analysis of your response:"
         } 
         //Overall sentiment of response
         let score = payload.analyzeSentiment[0].documentSentiment.score

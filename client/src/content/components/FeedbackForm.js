@@ -14,17 +14,22 @@ import SelectInput from '@material-ui/core/Select/SelectInput';
 const FeedbackForm = (props) => {
     const [isListening, setIsListening] = useState(false)
     const [inputs, setInputs] = useState({
-        answer: '',
-        content: '',
-        category: ''
-      })
+      answer: '',
+      content: '',
+      category: ''
+    });
+
+    // if a status message should be shown from the server
+    const [showStatusMessage, setShowStatusMessage] = useState(false);
+    // the message form the server
+    const [statusMessage, setStatusMessage] = useState('');
+    
         
     // here we will handle the change in the text user types
     const handleInputChange = e => {
         // e.persist();
         console.log(`Making a change to ${e.target.name}`)
-        setInputs({...inputs, 
-            [e.target.name]: e.target.value})
+        setInputs({...inputs, [e.target.name]: e.target.value})
     }
     
     const startListening = () => {
@@ -47,7 +52,6 @@ const FeedbackForm = (props) => {
                 content: props.selectedQuestion,
                 category: props.selectedCategory
             })
-            // console.log(inputs)
         }
         if (finalTranscript !== '') {
             // console.log('Got final result:', finalTranscript)
@@ -60,15 +64,20 @@ const FeedbackForm = (props) => {
 
     const handleSubmit = e => {
       e.preventDefault();
+      // mount props on input without setting state to handle edgecase
+      inputs.content = props.selectedQuestion;
+      inputs.category = props.selectedCategory;
       // get the current user from the jwt token
       const decoded = jwt_decode(localStorage.getItem('jwtToken'));
       Axios.post(`http://localhost:3001/users/${decoded.id}/questions`, inputs)
           .then(response => {
-              if (response.status === 200) {
+              if (response.status === 201) {
                   props.setAnalysis(true)
-                  console.log("🌴")
+                  console.log(response.data)
               } else {
-                  console.log(response.statusText)
+                // set state for server status message and rerender
+                setStatusMessage(response.data.message);
+                setShowStatusMessage(true);
               }
           })
           .catch(err => console.log(err))
@@ -77,6 +86,7 @@ const FeedbackForm = (props) => {
     const displaySpeechForm = (
         <Grid container spacing={12}>
             <Grid item xs={12} className="feedback-buttons-row">
+            { statusMessage }
                 <Button
                     variant="outlined"
                     color="secondary"
@@ -119,6 +129,7 @@ const FeedbackForm = (props) => {
     const displayWriteForm = (
         <Grid container spacing={6}>
             <Grid item xs={12} className="feedback-buttons-row">
+            { statusMessage }
                 <Button
                     variant="outlined"
                     color="secondary"
