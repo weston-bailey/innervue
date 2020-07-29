@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FeedbackForm from '../components/FeedbackForm';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
@@ -30,12 +30,31 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
+// state logic
+// category:
+// content:
+
+// handle question click events to set state
+// prevent default of click
+// set selected question state
+
+
 const GetFeedback = (props) => {
+        // pass down as properties to QuestionSelector
+    const [selectedQuestion, setSelectedQuestion] = useState("")
+    const [selectedCategory, setSelectedCategory] = useState("")
+ 
+    const handleQuestionClick = (event) => {
+        setSelectedQuestion(event.target.value)
+        setSelectedCategory(event.target.name)
+        // console.log(selectedQuestion)
+    };
+
     const classes = useStyles()
     return (
             <Grid container spacing={6}>
-                <Grid item xs={12}></Grid>
-                <Grid item xs={12}>
+                <Grid item xs={10}></Grid>
+                <Grid item xs={10}>
                     <Box className={classes.banner}>
                         <div className="feedback-instructions">
                         <h1>feedback</h1>
@@ -45,10 +64,14 @@ const GetFeedback = (props) => {
                         </div>
                         <Grid container spacing={6}>
                             <Grid item xs={6}>
-                            <FeedbackForm className={classes.feedback}/>
+                            <FeedbackForm 
+                            className={classes.feedback}
+                            selectedQuestion={selectedQuestion}
+                            selectedCategory={selectedCategory}
+                            />
                             </Grid>
                             <Grid item xs={5}>
-                            <QuestionSelector/>
+                            <QuestionSelector handleQuestionClick={handleQuestionClick}/>
                         </Grid>   
                         </Grid>   
                     </Box>

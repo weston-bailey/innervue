@@ -11,7 +11,7 @@ import Axios from 'axios';
 import SelectInput from '@material-ui/core/Select/SelectInput';
 
 
-const FeedbackForm = () => {
+const FeedbackForm = (props) => {
     const [isListening, setIsListening] = useState(false)
     const [createEntry, setCreateEntry] = useState(false)
     const [inputs, setInputs] = useState({
@@ -24,7 +24,8 @@ const FeedbackForm = () => {
     const handleInputChange = e => {
         // e.persist();
         console.log(`Making a change to ${e.target.name}`)
-        setInputs({...inputs, [e.target.name]: e.target.value})
+        setInputs({...inputs, 
+            [e.target.name]: e.target.value})
     }
     
     const startListening = () => {
@@ -44,9 +45,10 @@ const FeedbackForm = () => {
             // console.log('Got interim result:', interimTranscript)
             setInputs({
                 answer: transcript,
-                content: null,
-                category: null
+                content: props.selectedQuestion,
+                category: props.selectedCategory
             })
+            console.log(inputs)
         }
         if (finalTranscript !== '') {
             // console.log('Got final result:', finalTranscript)

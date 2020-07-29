@@ -5,6 +5,7 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
+import questions from '../Questions';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -16,38 +17,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function QuestionSelector() {
+export default function QuestionSelector(props) {
   const classes = useStyles();
-  const [state, setState] = React.useState({
-    age: '',
-    name: 'hai',
-  });
-
-  const handleChange = (event) => {
-    const name = event.target.name;
-    setState({
-      ...state,
-      [name]: event.target.value,
-    });
-  };
 
   return (
     <div>
       <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="age-native-simple">Question</InputLabel>
+        <InputLabel htmlFor="age-native-simple">Getting to Know You</InputLabel>
         <Select
           native
-          value={state.age}
-          onChange={handleChange}
-          inputProps={{
-            name: 'content',
-            id: 'question-native-simple',
-          }}
+        //   value={inputs.questions}
+          onChange={(event) => props.handleQuestionClick(event)}
+          name="Getting to Know You"
+        //   inputProps={{
+        //     name: 'content',
+        //     id: 'question-native-simple',
+        //   }}
         >
           <option aria-label="None" value="" />
-          <option value={10}>Ten</option>
-          <option value={20}>Twenty</option>
-          <option value={30}>Thirty</option>
+          {questions[0].map(item => (
+              <option key={item.content}>{item.content}</option>
+          ))} 
         </Select>
       </FormControl>
     </div>
