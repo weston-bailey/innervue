@@ -13,7 +13,6 @@ import SelectInput from '@material-ui/core/Select/SelectInput';
 
 const FeedbackForm = (props) => {
     const [isListening, setIsListening] = useState(false)
-    const [createEntry, setCreateEntry] = useState(false)
     const [inputs, setInputs] = useState({
         answer: '',
         content: '',
@@ -48,7 +47,7 @@ const FeedbackForm = (props) => {
                 content: props.selectedQuestion,
                 category: props.selectedCategory
             })
-            console.log(inputs)
+            // console.log(inputs)
         }
         if (finalTranscript !== '') {
             // console.log('Got final result:', finalTranscript)
@@ -65,12 +64,9 @@ const FeedbackForm = (props) => {
       const decoded = jwt_decode(localStorage.getItem('jwtToken'));
       Axios.post(`http://localhost:3001/users/${decoded.id}/questions`, inputs)
           .then(response => {
-              console.log(response.status)
               if (response.status === 200) {
-                  console.log(props.setAnalysis)
-                  props.setAnalysis(false)
+                  props.setAnalysis(true)
                   console.log("🌴")
-                  setCreateEntry(true)
               } else {
                   console.log(response.statusText)
               }
