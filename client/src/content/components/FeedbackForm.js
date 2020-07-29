@@ -65,8 +65,10 @@ const FeedbackForm = (props) => {
       const decoded = jwt_decode(localStorage.getItem('jwtToken'));
       Axios.post(`http://localhost:3001/users/${decoded.id}/questions`, inputs)
           .then(response => {
+              console.log(response.status)
               if (response.status === 200) {
-                  console.log(response.data.answeredQuestions)
+                  console.log(props.setAnalysis)
+                  props.setAnalysis(false)
                   console.log("🌴")
                   setCreateEntry(true)
               } else {

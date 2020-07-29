@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid'
 import { makeStyles } from '@material-ui/core/styles'
 import { Box } from '@material-ui/core'
 import QuestionSelector from '../components/QuestionSelector'
+import { set } from 'd3';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -40,6 +41,7 @@ const GetFeedback = (props) => {
         // pass down as properties to QuestionSelector
     const [selectedQuestion, setSelectedQuestion] = useState("")
     const [selectedCategory, setSelectedCategory] = useState("")
+    const [analysis, setAnalysis] = useState(false)
  
     const handleQuestionClick = (event) => {
         setSelectedQuestion(event.target.value)
@@ -48,32 +50,43 @@ const GetFeedback = (props) => {
     };
 
     const classes = useStyles()
-    return (
+
+    const gettingFeedback = (
+        <Grid container spacing={6}>
+            <Grid item xs={12}></Grid>
+            <Grid item xs={12}>
+             <Box className={classes.banner}>
+                <div className="feedback-instructions">
+                <h1>feedback</h1>
+                <Grid item xs={4}>
+                <p>Talk or type in the text box and submit to get instant feedback on your response!</p>
+                </Grid> 
+                </div>
             <Grid container spacing={6}>
-                <Grid item xs={12}></Grid>
-                <Grid item xs={12}>
-                    <Box className={classes.banner}>
-                        <div className="feedback-instructions">
-                        <h1>feedback</h1>
-                        <Grid item xs={4}>
-                                <p>Talk or type in the text box and submit to get instant feedback on your response!</p>
-                            </Grid> 
-                        </div>
-                        <Grid container spacing={6}>
-                            <Grid item xs={6}>
-                            <FeedbackForm 
-                            className={classes.feedback}
-                            selectedQuestion={selectedQuestion}
-                            selectedCategory={selectedCategory}
-                            />
-                            </Grid>
-                            <Grid item xs={5}>
-                            <QuestionSelector handleQuestionClick={handleQuestionClick}/>
-                        </Grid>  
-                        </Grid>
-                    </Box>
+                <Grid item xs={6}>
+                    <FeedbackForm 
+                    className={classes.feedback}
+                    selectedQuestion={selectedQuestion}
+                    selectedCategory={selectedCategory}
+                    setAnalysis={setAnalysis}
+                    />
                 </Grid>
+                <Grid item xs={5}>
+                <QuestionSelector handleQuestionClick={handleQuestionClick}/>
+            </Grid>  
             </Grid>
+            </Box>
+        </Grid>
+    </Grid>)
+
+    const gettingAnalysis = (
+        <div>hello</div>
+    )
+
+    return (
+            <div>
+                {analysis ? gettingAnalysis : gettingFeedback}
+            </div>
     );
 };
 
