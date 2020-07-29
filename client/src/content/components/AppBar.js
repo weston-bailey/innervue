@@ -31,7 +31,9 @@ export default function ButtonAppBar(props) {
         <Link className="nav-link" to="/myresponses">My Responses</Link>
       </Button>
       <Button color="inherit">
-        <Link className="nav-link" to="/feedback">Get Feedback</Link>
+        <Link className="nav-link" to="/feedback" onClick={() => {
+          props.setAnalysis(false)
+        }}>Get Feedback</Link>
       </Button>
       <Button color="inherit">
         <Link className="nav-link" to="/login" onClick={props.handleLogout}>Logout</Link>          

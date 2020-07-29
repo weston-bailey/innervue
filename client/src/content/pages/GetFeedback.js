@@ -29,20 +29,11 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-// state logic
-// category:
-// content:
-
-// handle question click events to set state
-// prevent default of click
-// set selected question state
-
-
 const GetFeedback = (props) => {
       // pass down as properties to QuestionSelector
     const [selectedQuestion, setSelectedQuestion] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
-    const [analysis, setAnalysis] = useState(false);
+    // const [analysis, setAnalysis] = useState(false);
     // question object with analysis in it sent from server
     const [question, setQuestion] = useState({
       category: '',
@@ -81,7 +72,7 @@ const GetFeedback = (props) => {
                       className={classes.feedback}
                       selectedQuestion={selectedQuestion}
                       selectedCategory={selectedCategory}
-                      setAnalysis={setAnalysis}
+                      setAnalysis={props.setAnalysis}
                       setQuestion={setQuestion}
                       />
                   </Grid>
@@ -97,11 +88,11 @@ const GetFeedback = (props) => {
 
     // map the negative mentions into something pretty -- this array can be empty sometimes (nothing was mentioned negetively)
     const negativity = ( question.analysis.negativeMentions.map( negativeMention => {
-        return(
+        return (
             <div>
             {negativeMention} was mentioned negatively. Consider reframing your experience with {negativeMention}. 
             </div>
-        )
+            )
         })
     )
 
@@ -118,7 +109,7 @@ const GetFeedback = (props) => {
 
     return (
             <div>
-                {analysis ? gettingAnalysis : gettingFeedback}
+                {props.analysis ? gettingAnalysis : gettingFeedback}
             </div>
     );
 };
