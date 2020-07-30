@@ -17,8 +17,7 @@ const User = require('../models/User');
 
 // test route
 router.get('/', (req, res) => {
-  // res.json(msgService.test());
-  return res.json(msgService.noQuestion());
+  return res.json(msgService.test());
 });
 
 // get user's answered questions from database
