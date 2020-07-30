@@ -36,7 +36,7 @@ export default function ButtonAppBar(props) {
         }}>Get Feedback</Link>
       </Button>
       <Button color="inherit">
-        <Link className="nav-link" to="/login" onClick={props.handleLogout}>Logout</Link>          
+        <Link className="nav-link" to="/login" onClick={props.handleLogout}>Logout</Link>
       </Button>
     </div>
   )
@@ -44,25 +44,25 @@ export default function ButtonAppBar(props) {
   const notAuthed = (
     <div>
       <Button color="inherit">
-        <Link className="nav-link" to="/login">Login</Link>          
+        <Link className="nav-link" to="/login">Login</Link>
       </Button>
       <Button color="inherit">
-        <Link className="nav-link" to="/signup">Signup</Link>          
+        <Link className="nav-link" to="/signup">Signup</Link>
       </Button>
     </div>
   )
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="static" color="secondary">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="secondary" aria-label="menu">
+          <IconButton edge="start" className={classes.menuButton} color="primary" aria-label="menu">
             <MenuIcon />
           </IconButton>
           <Typography variant="h3" className={classes.title}>
             <Link className="nav-link" to="/">innervue</Link>
           </Typography>
-          { props.isAuthenticated ? isAuthed : notAuthed }
+          {props.isAuthenticated ? isAuthed : notAuthed}
         </Toolbar>
       </AppBar>
     </div>

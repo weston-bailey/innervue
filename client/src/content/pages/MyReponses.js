@@ -51,22 +51,20 @@ const MyResponses = (props) => {
   if(questions){
 
      responses = questions.map(question => {
-      question.analysis.negativeMentions.map(negativeMention => {
-        return(
-          <div>
-            <p>{negativeMention} was mentioned negatively </p>
-          </div>
-        )
-    })
-
-    let analysisResponse = <div>
-        {/* <p>question: {question.content}</p> */}
-        <p>Your response: {question.answer}</p>
-        <p>Overall score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
-        <p>Feedback: {question.analysis.overallFeedback}</p>
-        <p>{responses}</p>
-      </div>
-
+        question.analysis.negativeMentions.map(negativeMention => {
+          return(
+            <div>
+              <p>{negativeMention} was mentioned negatively </p>
+            </div>
+          )
+        })
+       let analysisResponse = <div>
+       <p>Your response: {question.answer}</p>
+       <p>Overall score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+       <p>Feedback: {question.analysis.overallFeedback}</p>
+       Negative mentions: {question.analysis.negativeMentions.join(', ')}  
+       </div>
+       
       return (
         <div>
           <AnalysisAccordion

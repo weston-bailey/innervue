@@ -23,11 +23,11 @@ const useStyles = makeStyles(theme => ({
         paddingTop: "25px"
     },
     screencast: {
-        textAlign: "right"
+        textAlign: "right",
+        paddingLeft: "100px"
     }
 
 }));
-
 
 const Home = () => {
     const classes = useStyles()
@@ -36,21 +36,20 @@ const Home = () => {
             <Grid container spacing={6}>
                 <Grid item xs={12}></Grid>
                 <Grid item xs={12}>
-                    <Box>
-                        <Box className={classes.banner}>
-                            <h1>innervue</h1>
+                    <Box className={classes.banner}>
+                        <h1>innervue</h1>
+                        <Grid container>
                             <Grid item xs={4}>
                                 <p>Sometimes getting the job you want just takes a little practice in the mirror. </p>
                             </Grid>
-                            <Grid item xs={6} className={classes.screencast}>
-                                  <Icon />
-                                
-                              </Grid>
-                            <Grid item xs={6} className={classes.screencast}>
-                            <p textAlign="right">Insert screencast here</p>
+                            <Grid item xs={6} >
+                                <Icon />
                             </Grid>
-                        </Box>
-                        
+                            <Grid item xs={12}></Grid>
+                        </Grid>
+                        {/* TODO: <Grid item xs={6} className={classes.screencast}>
+                                <p>Insert screencast here</p>
+                            </Grid> */}
                     </Box>
                 </Grid>
             </Grid>
