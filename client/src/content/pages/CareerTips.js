@@ -42,12 +42,6 @@ const CareerTips = () => {
                     <Grid item xs={12} sm={6} md={4}>
                         <Card className={classes.card}>
                             <CardActionArea>
-                                {/* <CardMedia
-                                    className={classes.media}
-                                    alt=""
-                                    height="140"
-                                    image= /* results.tags.refs.primary_image*/
-                                /> */}
                                 <CardContent>
                                     <Typography gutterBottom variant="h5" component="h2">
                                         Title /* results.name*/
