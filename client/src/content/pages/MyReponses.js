@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import AnalysisAccordion from '../components/AnalysisAccordion'
 
 const MyResponses = (props) => {
   // if a status message should be shown from the server
@@ -18,7 +19,7 @@ const MyResponses = (props) => {
   if(!questions && !statusMessage){
     console.log('hit')
   
-    axios.get(`http://localhost:3001/users/${decoded.id}/questions`)
+    axios.get(`${process.env.REACT_APP_SERVER_URL}users/${decoded.id}/questions`)
     .then(response => {
         if (response.status === 201) {
           setQuestions(response.data)
@@ -47,19 +48,22 @@ const MyResponses = (props) => {
         question.analysis.negativeMentions.map(negativeMention => {
           return(
             <div>
-              <p>{negativeMention} was mentioned negatively mentioned </p>
+              <p>{negativeMention} was mentioned negatively </p>
             </div>
           )
         })
-
+       let analysisResponse = <div>
+       {/* <p>question: {question.content}</p> */}
+       <p>Your response: {question.answer}</p>
+       <p>Overall score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+       <p>Feedback: {question.analysis.overallFeedback}</p>
+       <p>{responses}</p>
+       </div>
       return (
         <div>
-          <p>category: {question.category}</p>
-          <p>question: {question.content}</p>
-          <p>response: {question.answer}</p>
-          <p>over all score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
-          <p>feedback: {question.analysis.overallFeedback}</p>
-          <p>{question.analysis.negativeMentions}</p>
+          <AnalysisAccordion
+          analysisResponse={analysisResponse} question={question.content} category={question.category}
+           />
         </div>
       )
     })
@@ -68,8 +72,8 @@ const MyResponses = (props) => {
 
   return (
       <div>
+        <h1>My Responses</h1>
           <p>{ statusMessage }</p>
-          my responses
           { responses ? responses : loading }
       </div>
   );
