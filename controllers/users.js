@@ -16,7 +16,13 @@ const User = require('../models/User');
 
 // test route
 router.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the users endpoint'});
+  res.json({ 
+    message: {
+      type: 'success',
+      title: 'Hello World',
+      content: 'Welcome to the users endpoint'
+    }
+  });
 });
 
 // get user's answered questions from database
@@ -25,13 +31,26 @@ router.get('/:userId/questions', (req, res) => {
   
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
+      toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
       // send status 500 and a message user not found
-      res.status(500).json({ message: 'database error finding user', error })
-      return toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
+      return res.status(500).json({   
+          message: {
+            type: 'error',
+            title: 'Internal Error 500',
+            content: 'Database error finding user'
+        }, 
+        error 
+      })
     }
     if(!user){
       // send status 200 and user not found message
-      return res.status(200).json({ message: 'User id not found' })
+      return res.status(200).json({   
+          message: {
+          type: 'warning',
+          title: 'Alert',
+          content: 'User id not found'
+        } 
+      })
     }
     // send user's answred questions to client
     res.status(201).json(user.answeredQuestions);
@@ -40,31 +59,53 @@ router.get('/:userId/questions', (req, res) => {
 
 // contact sentiment APIs and add answered question to user
 router.post('/:userId/questions', (req, res) => {
-
   // URL query string
   let userId = req.params.userId;
   // question, user's answer and category
   let question = req.body
 
   // we don't want blank values in the question, return immediately if they are found
-  if(!question.answer) return res.json({ message: 'Response is empty! Please submit a valid response!'});
-  if(!question.content || !question.category ) return res.json({ message: 'No question selected, please select a question and resubmit!'});
-  
+  if(!question.answer) return res.json({   
+      message: {
+        type: 'info',
+        title: 'Info',
+        content: 'Response is empty! Please submit a valid response!'
+    }
+  });
+
+  if(!question.content || !question.category ) return res.json({ 
+      message: {
+        type: 'info',
+        title: 'Info',
+        content: 'No question selected, please select a question and resubmit!'
+    }
+  });
+
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
-      // TODO send error status to client
-      res.json({ message: 'database error finding user', error })
-      return toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
+        toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
+        // TODO send error status to client
+        return res.json({   
+          message: {
+            type: 'error',
+            title: 'Internal Error 500',
+            content: 'Database error finding user'
+        }, 
+        error 
+      })
     }
+
     if(!user){
-      // user not found in database
-      return res.json({ message: 'User id not found'  })
+      // send status 200 and user not found message
+      return res.status(200).json({   
+        message: {
+          type: 'warning',
+          title: 'Alert',
+          content: 'User id not found'
+        } 
+      })
     }
 
-    // console.log(question)
-    // res.status(201).json(question)
-
-    // return
     // perfrom call APIs, perform analysis on user's answer, 
     (async text => {
       // Instantiates a client
@@ -113,7 +154,13 @@ router.post('/:userId/questions', (req, res) => {
           // console.log(print)
 
           // return if the answer was too short
-          if(payload.analyzeTone.utterances_tone.length < 4) return res.json({ message: 'Responses must be at least four sentances in length!'});
+          if(payload.analyzeTone.utterances_tone.length < 4) return res.json({   
+            message: {
+              type: 'info',
+              title: 'Info',
+              content: 'Responses must be at least four sentances in length!'
+            }
+          });
 
           // format analysis based on sentiment 
           let analysis = {}
@@ -162,9 +209,16 @@ router.post('/:userId/questions', (req, res) => {
           // save user in database
           user.save((error, user) => {
             if (error) { 
+              toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error);
               // TODO send error status to client
-              res.json({ message: 'database error saving user', error })
-              return toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error)
+              return res.json({   
+                  message: {
+                    type: 'error',
+                    title: 'Internal Error 500',
+                    content: 'Database error saving user'
+                }, 
+                error 
+              });
             }
             // respond to client with question
             res.status(201).json(question)
@@ -185,14 +239,27 @@ router.post('/auth/login', (req, res) => {
 
   User.findOne({ email }, (error, user) => {
     if (error) {
-      // send status 500 server error
-      res.status(500).json({ message: 'Internal database error finding user! Please try again.', error });
-      return toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
+      toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
+      // send status 500 todo server error
+      return res.status(500).json({   
+          message: {
+            type: 'error',
+            title: 'Internal Error 500',
+            content: 'Database error finding user'
+        }, 
+        error 
+      });
     }
 
     if(!user){
-      // if user is not found respond with status 400 bad request
-      return res.status(200).json({ message: 'No user found with that email!' });
+      // if user is not found 
+      return res.status(200).json({   
+          message: {
+            type: 'warning',
+            title: 'Login Alert',
+            content: 'Password or email is incorrect'
+          } 
+      });
     }
 
     // bcrypt compare passwords
@@ -211,16 +278,29 @@ router.post('/auth/login', (req, res) => {
         // Sign token
         jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
           if (error) {
+            toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error);
             // send status 500 server error
-            res.status(500).json({ message: 'Internal jwt token error authorizing user! Please try again.', error });
-            return toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
+            return res.json({   
+                message: {
+                  type: 'error',
+                  title: 'Internal Error 500',
+                  content: 'Internal jwt token error authorizing user! Please try again.'
+              }, 
+              error 
+            })
           }
           // send status 201 if sign in successful
           return res.status(201).json({ success: true, token: 'Bearer ' + token })
         });
       } else {
         // send status 200 if password is incorrect
-        return res.status(200).json({ message: 'Password or email is incorrect' })
+        return res.status(200).json({   
+          message: {
+            type: 'warning',
+            title: 'Login Alert',
+            content: 'Password or email is incorrect'
+          } 
+        });
       }
     })
   })
@@ -236,14 +316,27 @@ router.post('/auth/register', (req, res) => {
 
   User.findOne({ email }, (error, user) => {
     if (error) {
-      // send status 500 server error
-      res.status(500).json({ message: 'internal database error finding user! Please try again.', error });
-      return toolbox.logError('users.js', 'POST /register', 'User.findOne()', error)
+      toolbox.logError('users.js', 'POST /register', 'User.findOne()', error);
+      // TODO send error status to client
+      return res.json({   
+          message: {
+            type: 'error',
+            title: 'Internal Error 500',
+            content: 'Database error finding user'
+        }, 
+        error 
+      });
     }
 
     if(user){
       // if user is found respond with status 400 bad request
-      return res.status(200).json({ message: 'Email already exists in database' });
+      return res.status(200).json({   
+        message: {
+          type: 'warning',
+          title: 'Alert',
+          content: 'Email already exists in database'
+        } 
+      })
     } else {
       // if user is not found create a new one
       // create new user
@@ -256,24 +349,45 @@ router.post('/auth/register', (req, res) => {
       // Salt and Hash password with bcrypt-js, then save new user 
       bcrypt.genSalt(10, (error, salt) => {
         if (error) {
+          toolbox.logError('users.js', 'POST /register', 'bcrypt,genSalt()', error)
           // send status 500 server error
-          res.status(500).json({ message: 'Internal bcrypt error creating user! Please try again.', error });
-          return toolbox.logError('users.js', 'POST /register', 'bcrypt,genSalt()', error)
+          return res.json({   
+              message: {
+                type: 'error',
+                title: 'Internal Error 500',
+                content: 'Internal jwt token error authorizing user! Please try again.'
+            }, 
+            error 
+          })
         }
 
         bcrypt.hash(newUser.password, salt, (error, hash) => {
           if (error) {
-            // send status 500 server error
-            res.status(500).json({ message: 'Internal bcrypt error creating user! Please try again.', error });
-            return toolbox.logError('users.js', 'POST /register', 'bcrypt.hash()', error)
+            toolbox.logError('users.js', 'POST /register', 'bcrypt.hash()', error)
+            // send status 500 server error TODO
+            return res.json({   
+                message: {
+                  type: 'error',
+                  title: 'Internal Error 500',
+                  content: 'Internal bcrypt error creating user! Please try again.'
+              }, 
+              error 
+            })
           }
 
           newUser.password = hash;
           newUser.save((error, user) => {  
             if (error) { 
-              // send status 500 server error
-              res.status(500).json({ message: 'internal database error saving user! Please try again.', error });
-              return toolbox.logError('users.js', 'POST /register', 'newUser()', error) 
+              // send status 500 server error TODO
+              toolbox.logError('users.js', 'POST /register', 'newUser()', error) 
+              return res.json({   
+                  message: {
+                    type: 'error',
+                    title: 'Internal Error 500',
+                    content: 'Database error saving user'
+                }, 
+                error 
+              });
             }
 
             // once new user is saved create and send JSON Web Token
@@ -287,9 +401,16 @@ router.post('/auth/register', (req, res) => {
             // Sign token
             jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (error, token) => {
               if (error) {
+                toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
                 // send status 500 server error
-                res.status(500).json({ message: 'Internal jwt token error authorizing user! Please try again.', error });
-                return toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
+                return res.json({   
+                  message: {
+                    type: 'error',
+                    title: 'Internal Error 500',
+                    content: 'Internal jwt token error authorizing user! Please try again.'
+                }, 
+                error 
+                })
               }
               // send status 201 if sign in successful
               return res.status(201).json({ success: true, token: 'Bearer ' + token })

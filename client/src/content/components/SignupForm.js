@@ -62,7 +62,11 @@ export default function SignupForm(props) {
   // if a status message should be shown from the server
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   // the message form the server
-  const [statusMessage, setStatusMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState({
+    type: '',
+    title: '',
+    content: ''
+  });
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -89,7 +93,6 @@ export default function SignupForm(props) {
       password: password,
     }
 
-    // non auth test route: http://localhost:3001/users/register
     axios.post('http://localhost:3001/users/auth/register', newUser)
       .then(response => {
         if(response.status === 201){
@@ -196,7 +199,7 @@ export default function SignupForm(props) {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/login" to="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>
