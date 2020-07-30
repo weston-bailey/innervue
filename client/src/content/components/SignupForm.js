@@ -3,6 +3,8 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
+import FlashMessage from '../components/FlashMessage';
+import Copyright from '../components/Copyright';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,19 +16,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-        innervue
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -62,7 +51,11 @@ export default function SignupForm(props) {
   // if a status message should be shown from the server
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   // the message form the server
-  const [statusMessage, setStatusMessage] = useState('');
+  const [statusMessage, setStatusMessage] = useState({
+    type: '',
+    title: '',
+    content: ''
+  });
 
   const handleFirstName = (e) => {
     setFirstName(e.target.value);
@@ -80,6 +73,10 @@ export default function SignupForm(props) {
     setPassword(e.target.value);
   }
 
+  const handleCloseStatusMessage = () => {
+    setShowStatusMessage(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newUser = {
@@ -89,8 +86,7 @@ export default function SignupForm(props) {
       password: password,
     }
 
-    // non auth test route: http://localhost:3001/users/register
-    axios.post('http://localhost:3001/users/auth/register', newUser)
+    axios.post(`${process.env.REACT_APP_SERVER_URL}users/auth/register`, newUser)
       .then(response => {
         if(response.status === 201){
           // response.staus is 201 (created) then redirect
@@ -121,7 +117,12 @@ export default function SignupForm(props) {
 
   return (
     <Container component="main" maxWidth="xs">
-      { statusMessage }
+      <FlashMessage 
+        statusMessage={statusMessage} 
+        handleCloseStatusMessage={handleCloseStatusMessage} 
+        setShowStatusMessage={setShowStatusMessage}
+        showStatusMessage={showStatusMessage}
+      />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -196,7 +197,7 @@ export default function SignupForm(props) {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/login" to="/login" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

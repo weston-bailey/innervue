@@ -3,12 +3,14 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
+import FlashMessage from '../components/FlashMessage'
+import Copyright from '../components/Copyright';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -16,19 +18,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -51,8 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LoginForm(props) {
-  // console.log('login form props:')
-  // console.log(props)
+
   const classes = useStyles();
   // register form state for user input fields
   const [email, setEmail] = useState('');
@@ -62,7 +50,11 @@ export default function LoginForm(props) {
   // if a status message should be shown from the server
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   // the message form the server
-  const [statusMessage, setStatusMessage] = useState(false);
+  const [statusMessage, setStatusMessage] = useState({
+    type: '',
+    title: '',
+    content: ''
+  });
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -72,13 +64,18 @@ export default function LoginForm(props) {
     setPassword(e.target.value);
   }
 
+  const handleCloseStatusMessage = () => {
+    setShowStatusMessage(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const credentials = {
       email: email,
       password: password,
     }
-    axios.post('http://localhost:3001/users/auth/login', credentials)
+
+    axios.post(`${process.env.REACT_APP_SERVER_URL}users/auth/login`, credentials)
     .then(response => {
       if(response.status === 201){
         // response.staus if user is found and logged in
@@ -103,12 +100,17 @@ export default function LoginForm(props) {
       .catch(err => console.log(err));
   }
 
-    // redirect 
-    if (redirect) return <Redirect to="/feedback" />
+  // redirect 
+  if (redirect) return <Redirect to="/feedback" />
 
   return (
     <Container component="main" maxWidth="xs">
-      { statusMessage }
+      <FlashMessage 
+        statusMessage={statusMessage} 
+        handleCloseStatusMessage={handleCloseStatusMessage} 
+        setShowStatusMessage={setShowStatusMessage}
+        showStatusMessage={showStatusMessage}
+      />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -142,10 +144,11 @@ export default function LoginForm(props) {
             autoComplete="current-password"
             onChange={ handlePassword }
           />
-          <FormControlLabel
+          {/* TODO */}
+          {/* <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
-          />
+          /> */}
           <Button
             type="submit"
             fullWidth
@@ -157,12 +160,13 @@ export default function LoginForm(props) {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
+              {/* TODO */}
+              {/* <Link href="#" variant="body2">
                 Forgot password?
-              </Link>
+              </Link> */}
             </Grid>
             <Grid item>
-              <Link to="/signup" variant="body2">
+              <Link href="/signup" to="/signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
