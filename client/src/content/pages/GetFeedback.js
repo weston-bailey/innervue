@@ -7,11 +7,13 @@ import QuestionSelector from '../components/QuestionSelector';
 import { set } from 'd3';
 import FeedbackLogo from '../components/FeedbackLogo';
 import Paper from '@material-ui/core/Paper';
+import {BrowserRouter as Router, Route, Link} from "react-router-dom"
+import Button from '@material-ui/core/Button';
 
 
 const useStyles = makeStyles(theme => ({
     root: {
-        flexGrow: 1,
+        flexGrow: 2,
         fontSize: '10em',
         color: 'white',
         height: '5em',
@@ -21,13 +23,19 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: "#90caf9",
         height: '100%',
         color: "#000",
-        fontSize: "1rem",
+        fontSize: "2rem",
         paddingLeft: "50px",
         paddingTop: "25px"
     },
     feedbackLogo: {
-        textAlign: "center",
+        flexGrow: 2,
         border: "1px solid black"
+    },
+    analysis: {
+        fontSize: "0.5em"
+    },
+    moreFeedback: {
+        color: "#0235F4"
     }
 
 }));
@@ -104,20 +112,25 @@ const GetFeedback = (props) => {
             <Grid container spacing={6}>
                 <Grid item xs={12}></Grid>
                 <Grid item xs={12}>
-                    <Box>
-                        <Box className={classes.banner}>
-                            <h1>analysis</h1>
-                        <Grid item xs={6}>
-                            <Paper ><p><strong>Question category:</strong> {question.category}</p>
-                            <p><strong>The question you selected:</strong> {question.content}</p>
-                            <p><strong>Your response:</strong> {question.answer}</p>
-                            <p><strong>Your overall sentiment score:</strong> {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
-                            <p><strong>Our feedback:</strong> {question.analysis.overallFeedback}</p>
-                            <p>{negativity}</p>
-                            </Paper>
+                    <Box className={classes.banner}>
+                        <h1 >analysis</h1>
+                        <Grid container spacing={6}>
+                            <Grid item xs={6}>
+                                <Paper variant="outlined" ><p className={classes.analysis}><strong>Question category:</strong> {question.category}</p>
+                                <p className={classes.analysis}><strong>The question you selected:</strong> {question.content}</p>
+                                <p className={classes.analysis}><strong>Your response:</strong> {question.answer}</p>
+                                <p className={classes.analysis}><strong>Your overall sentiment score:</strong> {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+                                <p className={classes.analysis}><strong>Our feedback:</strong> {question.analysis.overallFeedback}</p>
+                                <p className={classes.analysis}>{negativity}</p>
+                                </Paper>
+                                <Button className={classes.moreFeedback} color="secondary" variant="contained">
+                                    <Link className="nav-link" to="/feedback" onClick={() => {
+                                        props.setAnalysis(false)
+                                        }}>Get More Feedback</Link>
+                                </Button>
+                            </Grid>
+                            <Grid item xs={6}><FeedbackLogo className={classes.feedbackLogo}/></Grid>
                         </Grid>
-                            <FeedbackLogo className={classes.feedbackLogo}/>
-                        </Box>
                     </Box>
                 </Grid>
             </Grid>
