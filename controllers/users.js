@@ -186,7 +186,7 @@ router.delete('/:userId/questions/:questionId', (req, res) => {
       return res.status(500).json(msgService.internalError(error));
     }
 
-    if(!user) return res.status(200).json(msgService.resourceNotFound());
+    if(!user) return res.status(200).json(msgService.alert());
     
     // dont try to crud unless the question exists exists 
     // TODO refactor error handling
@@ -230,8 +230,8 @@ router.post('/auth/login', (req, res) => {
       // send status 500 todo server error
       return res.status(500).json(msgService.internalError(error));
     }
-
-    if(!user) return res.status(200).json(msgService.resourceNotFound()); 
+    // here
+    if(!user) return res.status(200).json(msgService.alert('Password or email is incorrect.'));
 
     // bcrypt compare passwords
     bcrypt.compare(password, user.password)
