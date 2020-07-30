@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const toolbox = require('../private/toolbox');
+const msgService = require('../private/msgService');
 // Imports the Google Cloud client library
 const language = require(`@google-cloud/language`);
 const beautify = require("json-beautify");
@@ -16,13 +17,8 @@ const User = require('../models/User');
 
 // test route
 router.get('/', (req, res) => {
-  res.json({ 
-    message: {
-      type: 'success',
-      title: 'Hello World',
-      content: 'Welcome to the users endpoint'
-    }
-  });
+  // res.json(msgService.test());
+  return res.json(msgService.noQuestion());
 });
 
 // get user's answered questions from database
@@ -33,24 +29,11 @@ router.get('/:userId/questions', (req, res) => {
     if (error) {
       toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
       // send status 500 and a message user not found
-      return res.status(500).json({   
-          message: {
-            type: 'error',
-            title: 'Internal Error 500',
-            content: 'Database error finding user'
-        }, 
-        error 
-      })
+      return res.status(500).json(msgService.internalError(error));
     }
     if(!user){
       // send status 200 and user not found message
-      return res.status(200).json({   
-          message: {
-          type: 'warning',
-          title: 'Alert',
-          content: 'User id not found'
-        } 
-      })
+      return res.status(200).json(msgService.resourceNotFound());
     }
     // send user's answred questions to client
     res.status(201).json(user.answeredQuestions);
@@ -65,45 +48,20 @@ router.post('/:userId/questions', (req, res) => {
   let question = req.body
 
   // we don't want blank values in the question, return immediately if they are found
-  if(!question.answer) return res.json({   
-      message: {
-        type: 'info',
-        title: 'Info',
-        content: 'Response is empty! Please submit a valid response!'
-    }
-  });
+  if(!question.answer) return res.json(msgService.responseTooShort());
 
-  if(!question.content || !question.category) return res.json({ 
-      message: {
-        type: 'info',
-        title: 'Info',
-        content: 'No question selected, please select a question and resubmit!'
-    }
-  });
+  if(!question.content || !question.category) return res.json(msgService.noQuestion());
 
   User.findOne({ _id: userId }, (error, user) => {
     if (error) {
         toolbox.logError('users.js', 'POST /:userId/questions', 'User.findOne()', error)
         // TODO send error status to client
-        return res.json({   
-          message: {
-            type: 'error',
-            title: 'Internal Error 500',
-            content: 'Database error finding user'
-        }, 
-        error 
-      })
+        return res.status(500).json(msgService.internalError(error));
     }
 
     if(!user){
       // send status 200 and user not found message
-      return res.status(200).json({   
-        message: {
-          type: 'warning',
-          title: 'Alert',
-          content: 'User id not found'
-        } 
-      })
+      return res.status(200).json(msgService.resourceNotFound());
     }
 
     // perfrom call APIs, perform analysis on user's answer
@@ -154,13 +112,7 @@ router.post('/:userId/questions', (req, res) => {
           // console.log(print)
 
           // return if the answer was too short
-          if(payload.analyzeTone.utterances_tone.length < 4) return res.json({   
-            message: {
-              type: 'info',
-              title: 'Info',
-              content: 'Responses must be at least four sentances in length!'
-            }
-          });
+          if(payload.analyzeTone.utterances_tone.length < 4) return res.json(msgService.responseTooShort());
 
           // format analysis based on sentiment 
           let analysis = {}
@@ -211,14 +163,7 @@ router.post('/:userId/questions', (req, res) => {
             if (error) { 
               toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error);
               // TODO send error status to client
-              return res.json({   
-                  message: {
-                    type: 'error',
-                    title: 'Internal Error 500',
-                    content: 'Database error saving user'
-                }, 
-                error 
-              });
+              return res.status(500).json(msgService.internalError(error));
             }
             // respond to client with newly created question form the database
             res.status(201).json(user.answeredQuestions[user.answeredQuestions.length - 1])
@@ -238,25 +183,11 @@ router.delete('/:userId/questions/:questionId', (req, res) => {
     if (error) {
       toolbox.logError('users.js', 'DEL /:userId/questions/:questionId', 'User.findOne()', error)
       // send status 500 and a message user not found
-      return res.status(500).json({   
-          message: {
-            type: 'error',
-            title: 'Internal Error 500',
-            content: 'Database error finding user'
-        }, 
-        error 
-      })
+      return res.status(500).json(msgService.internalError(error));
     }
-    if(!user){
-      // send status 200 and user not found message
-      return res.status(200).json({   
-          message: {
-          type: 'warning',
-          title: 'Alert',
-          content: 'User id not found'
-        } 
-      })
-    }
+
+    if(!user) return res.status(200).json(msgService.alert());
+    
     // dont try to crud unless the question exists exists 
     // TODO refactor error handling
     if(user.answeredQuestions.id(questionId)){
@@ -266,14 +197,7 @@ router.delete('/:userId/questions/:questionId', (req, res) => {
           if (error) { 
             toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error);
             // TODO send error status to client
-            return res.json({   
-                message: {
-                  type: 'error',
-                  title: 'Internal Error 500',
-                  content: 'Database error saving user'
-              }, 
-              error 
-            });  
+            return res.status(500).json(msgService.internalError(error));  
           }
         // send user's answred questions to client
         res.status(201).json(user.answeredQuestions);
@@ -281,13 +205,7 @@ router.delete('/:userId/questions/:questionId', (req, res) => {
       });
     } else {
       // respond that the question doesn't exist
-      return res.status(500).json({   
-        message: {
-          type: 'error',
-          title: 'Internal Error 500',
-          content: 'Database error finding question'
-        }
-      })
+      return res.status(200).json(msgService.resourceNotFound());
     }
   })
 })
@@ -301,51 +219,19 @@ router.post('/auth/login', (req, res) => {
   let password = req.body.password;
 
   // validate fields
-  if(password.length == 0 || email.length == 0){
-    return res.status(200).json({   
-      message: {
-        type: 'warning',
-        title: 'Alert',
-        content: 'Please enter all fields'
-      } 
-    });
-  }
-
+  if(password.length == 0 || email.length == 0) return res.status(200).json(msgService.alert('Please enter all fields.'));
+  
   // reject bad emails
-  if(!email.match(/[\w-]+@([\w-]+\.)+[\w-]+/)){
-    return res.status(200).json({   
-      message: {
-        type: 'warning',
-        title: 'Alert',
-        content: 'Please enter a valid email'
-      } 
-    });
-  } 
-
+  if(!email.match(/[\w-]+@([\w-]+\.)+[\w-]+/)) return res.status(200).json(msgService.alert('Please enter a valid email.'));
+  
   User.findOne({ email }, (error, user) => {
     if (error) {
       toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
       // send status 500 todo server error
-      return res.status(500).json({   
-          message: {
-            type: 'error',
-            title: 'Internal Error 500',
-            content: 'Database error finding user'
-        }, 
-        error 
-      });
+      return res.status(500).json(msgService.internalError(error));
     }
-
-    if(!user){
-      // if user is not found 
-      return res.status(200).json({   
-          message: {
-            type: 'warning',
-            title: 'Login Alert',
-            content: 'Password or email is incorrect'
-          } 
-      });
-    }
+    // here
+    if(!user) return res.status(200).json(msgService.alert('Password or email is incorrect.'));
 
     // bcrypt compare passwords
     bcrypt.compare(password, user.password)
@@ -365,27 +251,14 @@ router.post('/auth/login', (req, res) => {
           if (error) {
             toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error);
             // send status 500 server error
-            return res.json({   
-                message: {
-                  type: 'error',
-                  title: 'Internal Error 500',
-                  content: 'Internal jwt token error authorizing user! Please try again.'
-              }, 
-              error 
-            })
+            return res.status(500).json(msgService.internalError(error));
           }
           // send status 201 if sign in successful
           return res.status(201).json({ success: true, token: 'Bearer ' + token })
         });
       } else {
         // send status 200 if password is incorrect
-        return res.status(200).json({   
-          message: {
-            type: 'warning',
-            title: 'Login Alert',
-            content: 'Password or email is incorrect'
-          } 
-        });
+        return res.status(200).json(msgService.alert('Password or email is incorrect.'));
       }
     })
   })
@@ -400,61 +273,23 @@ router.post('/auth/register', (req, res) => {
   let password = req.body.password;
 
   // validate fields
-  if(firstName.length == 0 || lastName.length == 0 || email.length == 0){
-    return res.status(200).json({   
-      message: {
-        type: 'warning',
-        title: 'Alert',
-        content: 'Please enter all fields'
-      } 
-    });
-  }
+  if(firstName.length == 0 || lastName.length == 0 || email.length == 0) return res.status(200).json(msgService.alert('Please enter all fields.'));
 
   // reject bad emails
-  if(!email.match(/[\w-]+@([\w-]+\.)+[\w-]+/)){
-    return res.status(200).json({   
-      message: {
-        type: 'warning',
-        title: 'Alert',
-        content: 'Please enter a valid email'
-      } 
-    });
-  } 
+  if(!email.match(/[\w-]+@([\w-]+\.)+[\w-]+/)) return res.status(200).json(msgService.alert('Please enter a valid email.'));
 
   // minimum password length
-  if(password.length < 8){
-    return res.status(200).json({   
-      message: {
-        type: 'warning',
-        title: 'Alert',
-        content: 'Passwords must have at least 8 characters'
-      } 
-    });
-  }
+  if(password.length < 8) return res.status(200).json(msgService.alert('Passwords must have at least 8 characters.'));
 
   User.findOne({ email }, (error, user) => {
     if (error) {
       toolbox.logError('users.js', 'POST /register', 'User.findOne()', error);
       // TODO send error status to client
-      return res.json({   
-          message: {
-            type: 'error',
-            title: 'Internal Error 500',
-            content: 'Database lookup error'
-        }, 
-        error 
-      });
+      return res.status(500).json(msgService.internalError(error));
     }
 
     if(user){
-      // if user is found respond with status 400 bad request
-      return res.status(200).json({   
-        message: {
-          type: 'warning',
-          title: 'Alert',
-          content: 'Email already exists in database'
-        } 
-      })
+      return res.status(200).json(msgService.alert('Email already exists in database.'));
     } else {
       // if user is not found create a new one
       // create new user
@@ -470,28 +305,14 @@ router.post('/auth/register', (req, res) => {
         if (error) {
           toolbox.logError('users.js', 'POST /register', 'bcrypt,genSalt()', error)
           // send status 500 server error
-          return res.json({   
-              message: {
-                type: 'error',
-                title: 'Internal Error 500',
-                content: 'Internal server error, please try again'
-            }, 
-            error 
-          })
+          return res.status(500).json(msgService.internalError(error));
         }
 
         bcrypt.hash(newUser.password, salt, (error, hash) => {
           if (error) {
             toolbox.logError('users.js', 'POST /register', 'bcrypt.hash()', error)
             // send status 500 server error TODO
-            return res.json({   
-                message: {
-                  type: 'error',
-                  title: 'Internal Error 500',
-                  content: 'Internal server error, please try again'
-              }, 
-              error 
-            })
+            return res.status(500).json(msgService.internalError(error));
           }
 
           newUser.password = hash;
@@ -499,14 +320,7 @@ router.post('/auth/register', (req, res) => {
             if (error) { 
               // send status 500 server error TODO
               toolbox.logError('users.js', 'POST /register', 'newUser()', error) 
-              return res.json({   
-                  message: {
-                    type: 'error',
-                    title: 'Internal Error 500',
-                    content: 'Database error saving user'
-                }, 
-                error 
-              });
+              return res.status(500).json(msgService.internalError(error));
             }
 
             // once new user is saved create and send JSON Web Token
@@ -522,14 +336,7 @@ router.post('/auth/register', (req, res) => {
               if (error) {
                 toolbox.logError('users.js', 'POST /login', 'jwt.sign()', error)
                 // send status 500 server error
-                return res.json({   
-                  message: {
-                    type: 'error',
-                    title: 'Internal Error 500',
-                    content: 'Internal server error, please try again'
-                }, 
-                error 
-                })
+                return res.status(500).json(msgService.internalError(error));
               }
               // send status 201 if sign in successful
               return res.status(201).json({ success: true, token: 'Bearer ' + token })
