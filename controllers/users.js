@@ -194,7 +194,7 @@ router.post('/:userId/questions', (req, res) => {
               analysis.overallFeedback = "Your response is looking good, try modifying it some more to make it more impactful.";
               break;
               case "positve" :
-                analysis.overallFeedback = "You response reflects a clearly positive sentiment. This will appeal to interviewers!";
+                analysis.overallFeedback = "Your response reflects a clearly positive sentiment. This will appeal to interviewers!";
               break;
             default :
               analysis.overallFeedback = "Oh no! something went wrong! 😕"
@@ -220,8 +220,9 @@ router.post('/:userId/questions', (req, res) => {
                 error 
               });
             }
-            // respond to client with question
-            res.status(201).json(question)
+            // respond to client with newly created question form the database
+            res.status(201).json(user.answeredQuestions[user.answeredQuestions.length - 1])
+            // res.status(201).json(question)
           })
         })
         .catch(error => console.error(error));
@@ -232,15 +233,62 @@ router.post('/:userId/questions', (req, res) => {
 router.delete('/:userId/questions/:questionId', (req, res) => {
   let userId = req.params.userId;
   let questionId = req.params.questionId;
-  res.json({ 
-    message: {
-      type: 'success',
-      title: 'Hello World',
-      content: 'lets delete a question',
-      userId: userId,
-      questionId: questionId
+
+  User.findOne({ _id: userId }, (error, user) => {
+    if (error) {
+      toolbox.logError('users.js', 'DEL /:userId/questions/:questionId', 'User.findOne()', error)
+      // send status 500 and a message user not found
+      return res.status(500).json({   
+          message: {
+            type: 'error',
+            title: 'Internal Error 500',
+            content: 'Database error finding user'
+        }, 
+        error 
+      })
     }
-  });
+    if(!user){
+      // send status 200 and user not found message
+      return res.status(200).json({   
+          message: {
+          type: 'warning',
+          title: 'Alert',
+          content: 'User id not found'
+        } 
+      })
+    }
+    // dont try to crud unless the question exists exists
+    if(user.answeredQuestions.id(questionId)){
+      user.answeredQuestions.id(questionId).remove( () => {
+        // save user after removal
+        user.save((error, user) => {
+          if (error) { 
+            toolbox.logError('users.js', 'POST /:userId/questions', 'user.save()', error);
+            // TODO send error status to client
+            return res.json({   
+                message: {
+                  type: 'error',
+                  title: 'Internal Error 500',
+                  content: 'Database error saving user'
+              }, 
+              error 
+            });  
+          }
+        // send user's answred questions to client
+        res.status(201).json(user.answeredQuestions);
+        });
+      });
+    } else {
+        // respond that the question doesn't exist
+        return res.status(500).json({   
+          message: {
+            type: 'error',
+            title: 'Internal Error 500',
+            content: 'Database error finding question'
+        }
+      })
+    }
+  })
 })
 
 // AUTH ROUTES TODO: refactor controllers
