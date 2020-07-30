@@ -229,6 +229,20 @@ router.post('/:userId/questions', (req, res) => {
   })
 });
 
+router.delete('/:userId/questions/:questionId', (req, res) => {
+  let userId = req.params.userId;
+  let questionId = req.params.questionId;
+  res.json({ 
+    message: {
+      type: 'success',
+      title: 'Hello World',
+      content: 'lets delete a question',
+      userId: userId,
+      questionId: questionId
+    }
+  });
+})
+
 // AUTH ROUTES TODO: refactor controllers
 
 // do login auth and log user in
