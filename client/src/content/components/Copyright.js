@@ -6,7 +6,7 @@ const Copyright = (props) => {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href={process.env.REACT_APP_CLIENT_URL} to="/">
+      <Link color="inherit" href="/" to="/">
         innervue
       </Link>{' '}
       {new Date().getFullYear()}

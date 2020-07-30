@@ -73,7 +73,7 @@ router.post('/:userId/questions', (req, res) => {
     }
   });
 
-  if(!question.content || !question.category ) return res.json({ 
+  if(!question.content || !question.category) return res.json({ 
       message: {
         type: 'info',
         title: 'Info',
@@ -106,9 +106,9 @@ router.post('/:userId/questions', (req, res) => {
       })
     }
 
-    // perfrom call APIs, perform analysis on user's answer, 
+    // perfrom call APIs, perform analysis on user's answer
     (async text => {
-      // Instantiates a client
+      // Instantiates a google langauge client
       const client = new language.LanguageServiceClient();
 
       // Instantiates an IBM Watson tone analyzer
@@ -184,8 +184,7 @@ router.post('/:userId/questions', (req, res) => {
                                        magnitude < 2 ? "moderately" :
                                        magnitude < 3 ? "clearly" :
                                        "extremely"); 
-          console.log(payload.analyzeSentiment[0].documentSentiment.score)
-          console.log(payload.analyzeSentiment[0].documentSentiment.magnitude)
+
           // provide some feedback based on overall sentiment score
           switch(analysis.overallScore){
             case "negative" :
