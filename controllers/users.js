@@ -175,7 +175,7 @@ router.post('/:userId/questions', (req, res) => {
 
           //Overall sentiment of users's answer
           let score = payload.analyzeSentiment[0].documentSentiment.score;
-          analysis.overallScore = (score < 0 ? "negative" :
+          analysis.overallScore = (score < -.5 ? "negative" :
                                    score < .5 ? "neutral" :
                                    "positve");
 
@@ -184,7 +184,8 @@ router.post('/:userId/questions', (req, res) => {
                                        magnitude < 2 ? "moderately" :
                                        magnitude < 3 ? "clearly" :
                                        "extremely"); 
-
+          console.log(payload.analyzeSentiment[0].documentSentiment.score)
+          console.log(payload.analyzeSentiment[0].documentSentiment.magnitude)
           // provide some feedback based on overall sentiment score
           switch(analysis.overallScore){
             case "negative" :
