@@ -31,7 +31,7 @@ function App() {
   // current user state
   let [currentUser, setCurrentUser] = useState('');
   let [isAuthenticated, setIsAuthenticated] = useState(false);
-  let [analysis, setAnalysis] = useState(true);
+  let [analysis, setAnalysis] = useState(false);
   useEffect( () => {
     let token;
     if(localStorage.getItem('jwtToken') === null ) {

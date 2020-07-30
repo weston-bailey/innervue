@@ -6,6 +6,8 @@ import { Box, Container } from '@material-ui/core';
 import QuestionSelector from '../components/QuestionSelector';
 import { set } from 'd3';
 import FeedbackLogo from '../components/FeedbackLogo';
+import Paper from '@material-ui/core/Paper';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -19,12 +21,13 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: "#90caf9",
         height: '100%',
         color: "#000",
-        fontSize: "2rem",
+        fontSize: "1rem",
         paddingLeft: "50px",
         paddingTop: "25px"
     },
-    feedback: {
-        textAlign: "right"
+    feedbackLogo: {
+        textAlign: "center",
+        border: "1px solid black"
     }
 
 }));
@@ -90,7 +93,7 @@ const GetFeedback = (props) => {
     const negativity = ( question.analysis.negativeMentions.map( negativeMention => {
         return (
             <div>
-            {negativeMention} was mentioned negatively. Consider reframing your experience with {negativeMention}. 
+            <strong>{negativeMention}</strong> was mentioned negatively. Consider reframing your experience with <strong>{negativeMention}</strong> . 
             </div>
             )
         })
@@ -104,16 +107,16 @@ const GetFeedback = (props) => {
                     <Box>
                         <Box className={classes.banner}>
                             <h1>analysis</h1>
-                       
-                        <div>
-                            <p>Question category: {question.category}</p>
-                            <p>The question you selected: {question.content}</p>
-                            <p>Your response: {question.answer}</p>
-                            <p>Your overall sentiment score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
-                            <p>Our feedback: {question.analysis.overallFeedback}</p>
+                        <Grid item xs={6}>
+                            <Paper ><p><strong>Question category:</strong> {question.category}</p>
+                            <p><strong>The question you selected:</strong> {question.content}</p>
+                            <p><strong>Your response:</strong> {question.answer}</p>
+                            <p><strong>Your overall sentiment score:</strong> {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+                            <p><strong>Our feedback:</strong> {question.analysis.overallFeedback}</p>
                             <p>{negativity}</p>
-                        </div>
-                        <FeedbackLogo />
+                            </Paper>
+                        </Grid>
+                            <FeedbackLogo className={classes.feedbackLogo}/>
                         </Box>
                     </Box>
                 </Grid>

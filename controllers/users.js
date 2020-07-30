@@ -149,7 +149,7 @@ router.post('/:userId/questions', (req, res) => {
               analysis.overallFeedback = "Your response is looking good, try modifying it some more to make it more impactful.";
               break;
               case "positve" :
-                analysis.overallFeedback = "You response reflects a clearly positive sentiment. This will appeal to interviewers!";
+                analysis.overallFeedback = "Your response reflects a clearly positive sentiment. This will appeal to interviewers!";
               break;
             default :
               analysis.overallFeedback = "Oh no! something went wrong! 😕"
