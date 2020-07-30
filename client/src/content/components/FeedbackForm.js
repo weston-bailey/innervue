@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import jwt_decode from 'jwt-decode';
+import FlashMessage from '../components/FlashMessage';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import StopIcon from '@material-ui/icons/Stop';
@@ -18,8 +19,15 @@ const FeedbackForm = (props) => {
     // if a status message should be shown from the server
     const [showStatusMessage, setShowStatusMessage] = useState(false);
     // the message form the server
-    const [statusMessage, setStatusMessage] = useState('');
+    const [statusMessage, setStatusMessage] = useState({
+      type: '',
+      title: '',
+      content: ''
+    });
     
+    const handleCloseStatusMessage = () => {
+      setShowStatusMessage(false);
+    };
         
     // here we will handle the change in the text user types
     const handleInputChange = e => {
@@ -65,7 +73,7 @@ const FeedbackForm = (props) => {
       inputs.category = props.selectedCategory;
       // get the current user from the jwt token
       const decoded = jwt_decode(localStorage.getItem('jwtToken'));
-      axios.post(`${process.env.REACT_APP_SERVER_URL}/users/${decoded.id}/questions`, inputs)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}users/${decoded.id}/questions`, inputs)
       .then(response => {
           if (response.status === 201) {
               props.setQuestion(response.data)
@@ -82,7 +90,6 @@ const FeedbackForm = (props) => {
     const displaySpeechForm = (
         <Grid container spacing={12}>
             <Grid item xs={12} className="feedback-buttons-row">
-            { statusMessage }
                 <Button
                     variant="outlined"
                     color="secondary"
@@ -125,7 +132,6 @@ const FeedbackForm = (props) => {
     const displayWriteForm = (
         <Grid container spacing={6}>
             <Grid item xs={12} className="feedback-buttons-row">
-            { statusMessage }
                 <Button
                     variant="outlined"
                     color="secondary"
@@ -169,6 +175,12 @@ const FeedbackForm = (props) => {
 
     return (
         <div className="show-correct-form">
+            <FlashMessage 
+              statusMessage={statusMessage} 
+              handleCloseStatusMessage={handleCloseStatusMessage} 
+              setShowStatusMessage={setShowStatusMessage}
+              showStatusMessage={showStatusMessage}
+            />
             {correctForm}
         </div>
     )

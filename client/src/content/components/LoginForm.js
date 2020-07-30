@@ -3,7 +3,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
-import FlashMessage from '../components/FlashMessage'
+import FlashMessage from '../components/FlashMessage';
 import Copyright from '../components/Copyright';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
