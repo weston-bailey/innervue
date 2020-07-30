@@ -3,6 +3,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
+import FlashMessage from '../components/FlashMessage'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -51,8 +52,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function LoginForm(props) {
-  // console.log('login form props:')
-  // console.log(props)
+
   const classes = useStyles();
   // register form state for user input fields
   const [email, setEmail] = useState('');
@@ -62,7 +62,11 @@ export default function LoginForm(props) {
   // if a status message should be shown from the server
   const [showStatusMessage, setShowStatusMessage] = useState(false);
   // the message form the server
-  const [statusMessage, setStatusMessage] = useState(false);
+  const [statusMessage, setStatusMessage] = useState({
+    type: '',
+    title: '',
+    content: ''
+  });
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -72,12 +76,17 @@ export default function LoginForm(props) {
     setPassword(e.target.value);
   }
 
+  const handleCloseStatusMessage = () => {
+    setShowStatusMessage(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const credentials = {
       email: email,
       password: password,
     }
+
     axios.post('http://localhost:3001/users/auth/login', credentials)
     .then(response => {
       if(response.status === 201){
@@ -103,12 +112,17 @@ export default function LoginForm(props) {
       .catch(err => console.log(err));
   }
 
-    // redirect 
-    if (redirect) return <Redirect to="/feedback" />
+  // redirect 
+  if (redirect) return <Redirect to="/feedback" />
 
   return (
     <Container component="main" maxWidth="xs">
-      { statusMessage }
+      <FlashMessage 
+        statusMessage={statusMessage} 
+        handleCloseStatusMessage={handleCloseStatusMessage} 
+        setShowStatusMessage={setShowStatusMessage}
+        showStatusMessage={showStatusMessage}
+      />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>

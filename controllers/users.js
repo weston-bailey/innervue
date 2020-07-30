@@ -38,7 +38,7 @@ router.get('/:userId/questions', (req, res) => {
   })
 });
 
-// contact google nl API and add answered question to user
+// contact sentiment APIs and add answered question to user
 router.post('/:userId/questions', (req, res) => {
 
   // URL query string
@@ -112,29 +112,27 @@ router.post('/:userId/questions', (req, res) => {
           // print = beautify(payload.analyzeSentiment, null, 2, 10);
           // console.log(print)
 
+          // return if the answer was too short
+          if(payload.analyzeTone.utterances_tone.length < 4) return res.json({ message: 'Responses must be at least four sentances in length!'});
+
           // format analysis based on sentiment 
           let analysis = {}
           analysis.negativeMentions = []
 
-          // return if the answer was too short
-          if(payload.analyzeTone.utterances_tone.length < 4) return res.json({ message: 'Responses must be at least four sentances in length!'});
-
           // search for any entities that have negative sentiment associated with them
           payload.analyzeEntitySentiment[0].entities.forEach(mention => {
-            if(mention.sentiment.score < -.5){
+            if(mention.sentiment.score < 0){
               analysis.negativeMentions.push(mention.name);
             }
           });
 
           //Overall sentiment of users's answer
           let score = payload.analyzeSentiment[0].documentSentiment.score;
-          console.log(score)
           analysis.overallScore = (score < 0 ? "negative" :
                                    score < .5 ? "neutral" :
                                    "positve");
 
           let magnitude = payload.analyzeSentiment[0].documentSentiment.magnitude;
-          console.log(magnitude)
           analysis.overallMagnitude = (magnitude < 1 ? "somewhat" :
                                        magnitude < 2 ? "moderately" :
                                        magnitude < 3 ? "clearly" :
@@ -177,87 +175,7 @@ router.post('/:userId/questions', (req, res) => {
   })
 });
 
-// do registration auth and create a new user
-router.post('/register', (req, res) => {
-  // data from request body (all are required to write to the database)
-  let firstName = req.body.firstName;
-  let lastName = req.body.lastName;
-  let email = req.body.email;
-  let password = req.body.password;
-
-  User.findOne({ email }, (error, user) => {
-    if (error) {
-    // TODO send error status to client
-      return toolbox.logError('users.js', 'POST /register', 'User.findOne()', error)
-    }
-    if(user){
-      // if user is found respond with user object
-      // TODO respond with status to client
-      res.json({ message: 'User Already Exists!' });
-    } else {
-      // if user is not found create a new one
-      // create new user
-      let newUser = new User({
-        firstName,
-        lastName,
-        email,
-        password,
-      })
-      
-      // TODO Salt and Hash password with bcrypt-js, then save new user 
-
-      newUser.save((error, user) => {  
-        if (error) { 
-          // TODO send error status to client
-          return toolbox.logError(error) 
-        }
-        res.json({ message: 'Creating New User!' });
-      })
-    }
-  })
-});
-
-// do login auth and log user in
-router.post('/login', (req, res) => {
-  // data from request body
-  let email = req.body.email;
-  let password = req.body.password;
-
-  User.findOne({ email }, (error, user) => {
-    if (error) {
-    // TODO send error status to client
-      return toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
-    }
-    if(!user){
-      // user was not found
-      // TODO send error status to client
-      return res.json({ message: 'User not found' })
-    }
-
-    // TODO bcrypt compare passwords
-
-    if(password !== user.password){
-
-      // TODO create jwt token payload
-
-      // TODO sign token
-
-      // TODO send jwt token
-
-      return res.json({ message: 'Passwords do not match'  })
-    } else {
-      // TODO send status to client
-      return res.json({ message: 'User Found, credentials match!' })
-    }
-  })
-});
-
-router.get('/current', (req, res) => {
-  // TODO send user info
-  res.send('<h1>🦘 Check user auth credentials 🦘</h1>');
-});
-
-// AUTH ROUTES FOR TESTING TODO: REMOVE/Inegrate with app routes
+// AUTH ROUTES TODO: refactor controllers
 
 // do login auth and log user in
 router.post('/auth/login', (req, res) => {
@@ -325,7 +243,6 @@ router.post('/auth/register', (req, res) => {
 
     if(user){
       // if user is found respond with status 400 bad request
-      // TODO stop sending user object
       return res.status(200).json({ message: 'Email already exists in database' });
     } else {
       // if user is not found create a new one
@@ -365,7 +282,6 @@ router.post('/auth/register', (req, res) => {
               firstName: user.firstName, 
               lastName: user.lastName, 
               fullName: user.getFullName(),
-              // answeredQuestions: user.answeredQuestions 
             }
 
             // Sign token
@@ -386,10 +302,8 @@ router.post('/auth/register', (req, res) => {
   })
 });
 
+// currently unused but could be useful for profile page stretch goal
 router.get('/auth/current', passport.authenticate('jwt', { session: false }), (req, res) => {
-  // res.json({ message: 'Success' })
-  // res.json(req.user);
-  // respond wit user data -- TODO figure out what kind of request to hit this route with
   res.json({ 
     id: req.user.id, 
     firstName: req.user.firstName, 
@@ -397,7 +311,6 @@ router.get('/auth/current', passport.authenticate('jwt', { session: false }), (r
     fullName: req.user.getFullName(),
     answeredQuestions: req.user.answeredQuestions 
   });
-
 });
 
 module.exports = router;
