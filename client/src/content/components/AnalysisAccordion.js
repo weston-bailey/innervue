@@ -29,12 +29,12 @@ const useStyles = makeStyles(theme => ({
      }
   }));
 
-  export default function AnalysisAccordion(props) {
+export default function AnalysisAccordion(props) {
     const classes = useStyles();
     const [expanded, setExpanded] = React.useState(false);
-  
+
     const handleChange = panel => (event, isExpanded) => {
-      setExpanded(isExpanded ? panel : false);
+        setExpanded(isExpanded ? panel : false);
     };
 
     const responses = [
@@ -50,30 +50,29 @@ const useStyles = makeStyles(theme => ({
         <div className={classes.root}>
           {responses.map(accordion => {
             const { id, heading, secondaryHeading, details } = accordion;
-            return (
-              <Accordion
-                expanded={expanded === id}
-                key={id}
-                onChange={handleChange(id)}
-              >
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1bh-content"
-                  id="panel1bh-header"
-                >
-                  <Typography className={classes.heading}>{heading}</Typography>
-                  <Typography className={classes.secondaryHeading}>
-                    {secondaryHeading}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography className={classes.details}>{details}</Typography>
-                </AccordionDetails>
-               
-              </Accordion>
-            );
+              return (
+                  <Accordion
+                      expanded={expanded === id}
+                      key={id}
+                      onChange={handleChange(id)}
+                  >
+                      <AccordionSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1bh-content"
+                          id="panel1bh-header"
+                      >
+                          <Typography className={classes.heading}>{heading}</Typography>
+                          <Typography className={classes.secondaryHeading}>
+                              {secondaryHeading}
+                          </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails>
+                          <Typography className={classes.details}>{details}</Typography>
+                      </AccordionDetails>
+                  </Accordion>
+              );
           })}
-        </div>
+          </div>
       );
-    }
+  }
     
