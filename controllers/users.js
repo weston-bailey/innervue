@@ -237,6 +237,28 @@ router.post('/auth/login', (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
 
+  // validate fields
+  if(password.length == 0 || email.length == 0){
+    return res.status(200).json({   
+      message: {
+        type: 'warning',
+        title: 'Alert',
+        content: 'Please enter all fields'
+      } 
+    });
+  }
+
+  // reject bad emails
+  if(!email.match(/[\w-]+@([\w-]+\.)+[\w-]+/)){
+    return res.status(200).json({   
+      message: {
+        type: 'warning',
+        title: 'Alert',
+        content: 'Please enter a valid email'
+      } 
+    });
+  } 
+
   User.findOne({ email }, (error, user) => {
     if (error) {
       toolbox.logError('users.js', 'POST /login', 'User.findOne()', error)
@@ -314,6 +336,39 @@ router.post('/auth/register', (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
 
+  // validate fields
+  if(firstName.length == 0 || lastName.length == 0 || email.length == 0){
+    return res.status(200).json({   
+      message: {
+        type: 'warning',
+        title: 'Alert',
+        content: 'Please enter all fields'
+      } 
+    });
+  }
+
+  // reject bad emails
+  if(!email.match(/[\w-]+@([\w-]+\.)+[\w-]+/)){
+    return res.status(200).json({   
+      message: {
+        type: 'warning',
+        title: 'Alert',
+        content: 'Please enter a valid email'
+      } 
+    });
+  } 
+
+  // minimum password length
+  if(password.length < 8){
+    return res.status(200).json({   
+      message: {
+        type: 'warning',
+        title: 'Alert',
+        content: 'Passwords must have at least 8 characters'
+      } 
+    });
+  }
+
   User.findOne({ email }, (error, user) => {
     if (error) {
       toolbox.logError('users.js', 'POST /register', 'User.findOne()', error);
@@ -322,7 +377,7 @@ router.post('/auth/register', (req, res) => {
           message: {
             type: 'error',
             title: 'Internal Error 500',
-            content: 'Database error finding user'
+            content: 'Database lookup error'
         }, 
         error 
       });
@@ -346,6 +401,7 @@ router.post('/auth/register', (req, res) => {
         email,
         password,
       })
+      
       // Salt and Hash password with bcrypt-js, then save new user 
       bcrypt.genSalt(10, (error, salt) => {
         if (error) {
@@ -355,7 +411,7 @@ router.post('/auth/register', (req, res) => {
               message: {
                 type: 'error',
                 title: 'Internal Error 500',
-                content: 'Internal jwt token error authorizing user! Please try again.'
+                content: 'Internal server error, please try again'
             }, 
             error 
           })
@@ -369,7 +425,7 @@ router.post('/auth/register', (req, res) => {
                 message: {
                   type: 'error',
                   title: 'Internal Error 500',
-                  content: 'Internal bcrypt error creating user! Please try again.'
+                  content: 'Internal server error, please try again'
               }, 
               error 
             })
@@ -407,7 +463,7 @@ router.post('/auth/register', (req, res) => {
                   message: {
                     type: 'error',
                     title: 'Internal Error 500',
-                    content: 'Internal jwt token error authorizing user! Please try again.'
+                    content: 'Internal server error, please try again'
                 }, 
                 error 
                 })
@@ -416,7 +472,6 @@ router.post('/auth/register', (req, res) => {
               return res.status(201).json({ success: true, token: 'Bearer ' + token })
             });
           })
-
         })
       })
     }
