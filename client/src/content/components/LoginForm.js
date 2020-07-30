@@ -8,8 +8,8 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
@@ -87,7 +87,7 @@ export default function LoginForm(props) {
       password: password,
     }
 
-    axios.post('http://localhost:3001/users/auth/login', credentials)
+    axios.post(`${process.env.REACT_APP_SERVER_URL}users/auth/login`, credentials)
     .then(response => {
       if(response.status === 201){
         // response.staus if user is found and logged in

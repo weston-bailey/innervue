@@ -3,6 +3,7 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
+import FlashMessage from '../components/FlashMessage'
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -84,6 +85,10 @@ export default function SignupForm(props) {
     setPassword(e.target.value);
   }
 
+  const handleCloseStatusMessage = () => {
+    setShowStatusMessage(false);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const newUser = {
@@ -124,7 +129,12 @@ export default function SignupForm(props) {
 
   return (
     <Container component="main" maxWidth="xs">
-      { statusMessage }
+      <FlashMessage 
+        statusMessage={statusMessage} 
+        handleCloseStatusMessage={handleCloseStatusMessage} 
+        setShowStatusMessage={setShowStatusMessage}
+        showStatusMessage={showStatusMessage}
+      />
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
