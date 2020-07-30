@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import FeedbackForm from '../components/FeedbackForm';
-import Grid from '@material-ui/core/Grid'
-import { makeStyles } from '@material-ui/core/styles'
-import { Box } from '@material-ui/core'
-import QuestionSelector from '../components/QuestionSelector'
+import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import { Box, Container } from '@material-ui/core';
+import QuestionSelector from '../components/QuestionSelector';
 import { set } from 'd3';
-import questions from '../Questions';
+import FeedbackLogo from '../components/FeedbackLogo';
+import Paper from '@material-ui/core/Paper';
+import {BrowserRouter as Router, Route, Link} from "react-router-dom"
+import Button from '@material-ui/core/Button';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
-        flexGrow: 1,
+        flexGrow: 2,
         fontSize: '10em',
         color: 'white',
         height: '5em',
@@ -23,8 +27,15 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: "50px",
         paddingTop: "25px"
     },
-    feedback: {
-        textAlign: "right"
+    feedbackLogo: {
+        flexGrow: 2,
+        border: "1px solid black"
+    },
+    analysis: {
+        fontSize: "0.5em"
+    },
+    moreFeedback: {
+        color: "#0235F4"
     }
 
 }));
@@ -90,7 +101,7 @@ const GetFeedback = (props) => {
     const negativity = ( question.analysis.negativeMentions.map( negativeMention => {
         return (
             <div>
-            {negativeMention} was mentioned negatively. Consider reframing your experience with {negativeMention}. 
+            <strong>{negativeMention}</strong> was mentioned negatively. Consider reframing your experience with <strong>{negativeMention}</strong> . 
             </div>
             )
         })
@@ -98,14 +109,35 @@ const GetFeedback = (props) => {
 
     const gettingAnalysis = (
         <div>
-          <p>Question category: {question.category}</p>
-          <p>The question you selected: {question.content}</p>
-          <p>Your response: {question.answer}</p>
-          <p>Your overall sentiment score: {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
-          <p>Our feedback: {question.analysis.overallFeedback}</p>
-          <p>{negativity}</p>
+            <Grid container spacing={6}>
+                <Grid item xs={12}></Grid>
+                <Grid item xs={12}>
+                    <Box className={classes.banner}>
+                        <h1 >analysis</h1>
+                        <Grid container spacing={6}>
+                            <Grid item xs={6}>
+                                <Paper variant="outlined" ><p className={classes.analysis}><strong>Question category:</strong> {question.category}</p>
+                                <p className={classes.analysis}><strong>The question you selected:</strong> {question.content}</p>
+                                <p className={classes.analysis}><strong>Your response:</strong> {question.answer}</p>
+                                <p className={classes.analysis}><strong>Your overall sentiment score:</strong> {question.analysis.overallMagnitude} {question.analysis.overallScore} </p>
+                                <p className={classes.analysis}><strong>Our feedback:</strong> {question.analysis.overallFeedback}</p>
+                                <p className={classes.analysis}>{negativity}</p>
+                                </Paper>
+                                <Button className={classes.moreFeedback} color="secondary" variant="contained">
+                                    <Link className="nav-link" to="/feedback" onClick={() => {
+                                        props.setAnalysis(false)
+                                        }}>Get More Feedback</Link>
+                                </Button>
+                            </Grid>
+                            <Grid item xs={6}><FeedbackLogo className={classes.feedbackLogo}/></Grid>
+                        </Grid>
+                    </Box>
+                </Grid>
+            </Grid>
         </div>
     )
+
+        
 
     return (
             <div>

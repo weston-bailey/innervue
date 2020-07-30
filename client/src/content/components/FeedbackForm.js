@@ -6,10 +6,7 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import KeyboardVoiceIcon from '@material-ui/icons/KeyboardVoice';
 import StopIcon from '@material-ui/icons/Stop';
 import Grid from '@material-ui/core/Grid';
-import Select from '@material-ui/core/Select';
 import axios from 'axios';
-import SelectInput from '@material-ui/core/Select/SelectInput';
-
 
 const FeedbackForm = (props) => {
     const [isListening, setIsListening] = useState(false)
@@ -68,7 +65,7 @@ const FeedbackForm = (props) => {
       inputs.category = props.selectedCategory;
       // get the current user from the jwt token
       const decoded = jwt_decode(localStorage.getItem('jwtToken'));
-      axios.post(`http://localhost:3001/users/${decoded.id}/questions`, inputs)
+      axios.post(`${process.env.REACT_APP_SERVER_URL}/users/${decoded.id}/questions`, inputs)
       .then(response => {
           if (response.status === 201) {
               props.setQuestion(response.data)
