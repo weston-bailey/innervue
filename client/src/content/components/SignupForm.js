@@ -3,7 +3,8 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import setAuthToken from '../../utils/setAuthToken';
 import { Redirect } from 'react-router-dom';
-import FlashMessage from '../components/FlashMessage'
+import FlashMessage from '../components/FlashMessage';
+import Copyright from '../components/Copyright';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,19 +16,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-        innervue
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -98,7 +86,7 @@ export default function SignupForm(props) {
       password: password,
     }
 
-    axios.post('http://localhost:3001/users/auth/register', newUser)
+    axios.post(`${process.env.REACT_APP_SERVER_URL}users/auth/register`, newUser)
       .then(response => {
         if(response.status === 201){
           // response.staus is 201 (created) then redirect
