@@ -257,7 +257,8 @@ router.delete('/:userId/questions/:questionId', (req, res) => {
         } 
       })
     }
-    // dont try to crud unless the question exists exists
+    // dont try to crud unless the question exists exists 
+    // TODO refactor error handling
     if(user.answeredQuestions.id(questionId)){
       user.answeredQuestions.id(questionId).remove( () => {
         // save user after removal
@@ -279,12 +280,12 @@ router.delete('/:userId/questions/:questionId', (req, res) => {
         });
       });
     } else {
-        // respond that the question doesn't exist
-        return res.status(500).json({   
-          message: {
-            type: 'error',
-            title: 'Internal Error 500',
-            content: 'Database error finding question'
+      // respond that the question doesn't exist
+      return res.status(500).json({   
+        message: {
+          type: 'error',
+          title: 'Internal Error 500',
+          content: 'Database error finding question'
         }
       })
     }
