@@ -1,5 +1,9 @@
-# Project Structure
+# innervue
 
+## Mission Statement
+Giving job applicants the key tools to ace the interview.
+
+# Project Structure
 
 ##  Team members and their roles:
 
@@ -24,8 +28,6 @@ Karly:
 * Wireframes
 * Full-Stack Developer
 
-## Mission Statement
-Giving job applicants the key tools to ace the interview.
 
 ## Wireframes
 
