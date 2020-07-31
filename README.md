@@ -1,61 +1,105 @@
-# innervue
+# Project Structure
 
-## Giving  job applicants the key tools to ace the interview
 
-### Neri Ramirez 
-* Product Manager
-* Full-Stack Developer
-* Scrum Master
-* Pitch Deck
+##  Team members and their roles:
 
-### Karly Smith
-* Organization
-* Research
-* Wireframes
-* Full-Stack Developer
+Team Name: WNK (aka 'The Winkers')
 
-### Weston Bailey
+Wes:
 * GIT Master
 * README
 * ERD/Database Manager
 * Full-Stack Developer
 
+Neri:
+* Product Manager
+* Full-Stack Developer
+* Scrum Master
+* Pitch Deck
+* Design
+
+Karly: 
+* Organization
+* Research
+* Wireframes
+* Full-Stack Developer
+
+## Mission Statement
+Giving job applicants the key tools to ace the interview.
+
+## Wireframes
+
+![](https://i.imgur.com/mwm9SD6.png)
+![](https://i.imgur.com/qBVZVZH.png)
+
+
+
 ## MVP
 
-[] user can login and respond to interview questions
+[X] User can login and respond to interview questions
 
-[] user can choose from a variety of interview questions
+[X] User can choose from a variety of interview questions
 
-[] user can respond with speech or writing 
+[X] User can respond with speech or writing 
 
-[] user is given feedback on their response to interview questions 
+[X] User is given feedback on their response to interview questions using sentiment analysis
 
-[] user can view responses to questions that are saved in the database from the past
+[X] User can view past responses and their analysis
 
-[] user can revisit past question to try them again
+[X] User can revisit past question to try them again
 
 ## Stretch Goals
 
-[] job tips using [muse](https://www.themuse.com/developers/api/v2) API (side bar with taglines, user can save links to database)
+[ ] Integrate career tips using [muse](https://www.themuse.com/developers/api/v2) API (side bar with taglines, user can save links to database)
 
-[] Calendar function allows user to enter interview milestones
+[ ] Calendar function allows user to enter interview milestones
+ 
 
-[] Data visualization of answered questions and job searches with d3 
+# Technologies We Used
 
-## Project Resources
+### Frameworks
+* React
+* Express
+* Node.js
 
-#### Miro Boards
+### Database
+* MongoDB
+* Mongoose
 
-WireFrames, Daily Sprints, EBD
+> ### Sentiment Analysis APIs
+> * IBM Watson
+> * Google Cloud Natural Language
+    > Analyze Sentiment 
+    > Analyze Entity Sentiment
 
-[Miro](https://miro.com/app/board/o9J_ko3gZmQ=/)
+> ### HTTP requests
+> * axios
+> * fetch
 
-#### Pitch Deck
+> ### Styling Framework
+> * Material-UI [link](https://material-ui.com/getting-started/installation/)
 
-[deck](https://docs.google.com/presentation/d/1OtWFGOcKu8Px85JDC-xJeiwRxAOn1UNitU407e54-y4/edit#slide=id.ge9090756a_1_78)
 
-> ### Naming conventions
-> *
+> ### Node packages
+> * Material-UI [link](https://www.npmjs.com/package/@material-ui/core)
+> * React Speech Recognition [link](https://www.npmjs.com/package/react-speech-recognition)
+
+### Auth Tools
+* Bcrypt
+* Passport
+* Cors
+* JSON Webtoken
+
+
+
+# Project Planning
+### Time Management Plan
+
+> Daily activity calendar
+> To-dos per person and team goals
+> Morning and evening check-ins
+> Miro Board
+
 
 > ### Project Folder Organization
 > ```
@@ -71,47 +115,20 @@ WireFrames, Daily Sprints, EBD
 > ├── file_in_root.ext
 > └── README.md
 > ```
-# Agree on technologies to use
-
-> ### possible sentiment analysis APIs
-> * sentim.ai >> easy to work with
-> * cloud natural language
-> * npm sentiment
-
-> ### HTTP requests
-> * axios
-> * fetch
-
-> ### style/css technology 
-> * material ui [link](https://material-ui.com/getting-started/installation/)
-> * materialize
-> * bootstrap
-
-> ### Node packages
-> * material ui [link](https://www.npmjs.com/package/@material-ui/core)
-> * speech recognition 
-
-# Plan routes
-
-> ## React routes
+> ### React routes
 > HTTP Path | Component | Auth Required
 > ----------|-----------|--------------|
 > / | |
 >  /login | |
-> 
+>  /feedback | |
+>   /myresponses | |
 
-> ## API routes (express)
+> ### API routes (express)
 > HTTP Verb | Route | Request | Response | Auth Required
 > ----------|-------|---------|----------|--------------|
-> GET | /api/v1/:userId | request params | validate user | yes
-> POST | /api/v1/:userId |  |  |
-> GET | /api/v1/:userId/question | |  |
-> PUT | /api/v1/:userId/question  | |  |
-> POST | /api/v1/:userId/question | |  |
-
-
-
-# Plan React Component Tree based on wireframes
+> GET | /api/v1/:userId | | |
+> POST | /api/v1/ TODO | |  |
+> 
 
 > ### Major Components
 > ```
@@ -132,9 +149,7 @@ WireFrames, Daily Sprints, EBD
 > └── Component
 > ```
 
-## Example pseudocode for the project
-
-### Database model
+## Database model
 
 ```javascript
 const mongoose = require('mongoose');
@@ -181,7 +196,7 @@ const userSchema = new mongoose.Schema({
 );
 ```
 
-### Questions data model
+## Questions data model
 
 ```javascript
 // array of questions
@@ -213,5 +228,3 @@ const questions = [
 
 ]
 ```
-
-## Sources:
